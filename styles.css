@@ -11,7 +11,7 @@
   --gold-100: #f4ebc9;
   --gold-pressed: #bb9a30;
   --paper: #ffffff;
-  --frame: #f2f1ee;
+  --frame: #fbfaf9;
   --muted: #63635f;
   --line: #e4e4e0;
   --line-strong: #bfbfba;
@@ -36,6 +36,7 @@
   --bar-h: 64px;
   --tabs-h: 48px;
   --header-h: 112px; /* top bar 64 + tabs 48 */
+  --r: 4px;          /* one corner radius everywhere */
   --bleed: 12px;     /* pressed tint extends this far past the text edge */
 }
 
@@ -111,7 +112,7 @@ img { display: block; }
 /* Language button: "EN" + chevron, no fill and no outline. 48px high tap area. */
 .lang-btn {
   display: flex; align-items: center; flex: none;
-  height: 48px; padding: 12px; border: 0; border-radius: 8px; background: none;
+  height: 48px; padding: 12px; border: 0; border-radius: var(--r); background: none;
   font-size: 16px; line-height: 24px; font-weight: 500; color: var(--text-primary);
 }
 .lang-btn:active { background: var(--surface-subtle); }
@@ -119,7 +120,7 @@ img { display: block; }
 .icon-btn {
   display: grid; place-items: center; flex: none;
   width: 48px; height: 48px; padding: 0;
-  border: 0; border-radius: 8px; background: none; color: var(--text-primary);
+  border: 0; border-radius: var(--r); background: none; color: var(--text-primary);
 }
 .icon-btn:active { background: var(--surface-subtle); }
 
@@ -192,7 +193,7 @@ h1 { font-weight: 400; }
 .step--current .step__content { padding-bottom: 0; }
 .step__head {
   display: grid; gap: 2px; list-style: none; cursor: pointer;
-  padding: 8px; margin: -8px; border-radius: 12px; /* pressed tint reaches 8px past the text, layout unchanged */
+  padding: 8px; margin: -8px; border-radius: var(--r); /* pressed tint reaches 8px past the text, layout unchanged */
 }
 .step__head::-webkit-details-marker { display: none; }
 .step__head:active { background: var(--surface-subtle); }
@@ -202,9 +203,12 @@ h1 { font-weight: 400; }
 .step__chevron { color: var(--ink); transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1); }
 .step__content[open]:not(.is-closing) .step__chevron { transform: rotate(180deg); }
 .step__sub { font-size: 15px; line-height: 23px; color: var(--text-secondary); }
-.step__panel { display: grid; gap: 4px; padding-top: 10px; } /* 2px content gap + 8px panel padding in Figma */
+.step__panel { padding-top: 12px; } /* 2px content gap + 10px above the details card in Figma */
 .step__body { font-size: 16px; line-height: 24px; }
-.step__more { font-size: 15px; line-height: 23px; color: var(--text-secondary); }
+.step__product { font-size: 16px; line-height: 24px; font-weight: 500; }
+.step__fact { font-size: 14px; line-height: 20px; color: var(--text-secondary); }
+.card-block { display: grid; gap: 4px; padding: 12px; border-radius: var(--r); background: var(--surface-subtle); font-size: 16px; line-height: 24px; }
+.card-block .step__fact { margin-top: 4px; }
 
 .link { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
 .link:active { color: var(--text-secondary); }
@@ -215,7 +219,44 @@ h1 { font-weight: 400; }
 .kv__row { display: flex; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
 .kv__row:last-child { border-bottom: 0; }
 .kv dt { flex: 0 0 110px; font-size: 15px; line-height: 23px; color: var(--text-secondary); overflow-wrap: anywhere; }
-.kv dd { flex: 1; min-width: 0; font-size: 15px; line-height: 23px; font-weight: 500; overflow-wrap: anywhere; }
+.kv dd { flex: 1; min-width: 0; font-size: 17px; line-height: 25px; font-weight: 500; overflow-wrap: anywhere; }
+
+/* ---------- Key figures (top of Specifications) ---------- */
+.figures { display: flex; gap: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle); }
+.figure { display: grid; gap: 2px; align-content: start; min-width: 0; }
+.figure:nth-child(1) { flex: 0 0 112px; }
+.figure:nth-child(2) { flex: 0 0 134px; }
+.figure:nth-child(3) { flex: 1; }
+.figure dt { font-size: 15px; line-height: 23px; color: var(--text-secondary); white-space: nowrap; }
+.figure dd { display: grid; gap: 2px; }
+.figure__num { font-size: 40px; line-height: 40px; font-weight: 500; letter-spacing: -0.045em; }
+.figure__unit { font-size: 15px; line-height: 23px; font-weight: 500; }
+.figure__extra { font-size: 14px; line-height: 20px; color: var(--text-secondary); }
+
+/* ---------- Expandable row (Category) ---------- */
+.more { border-top: 1px solid var(--border-subtle); }
+.more__head { display: flex; gap: 16px; align-items: flex-start; padding: 12px 0; cursor: pointer; list-style: none; border-radius: var(--r); }
+.more__head::-webkit-details-marker { display: none; }
+.more__head:active { background: var(--surface-subtle); }
+.more__label { flex: 0 0 110px; font-size: 15px; line-height: 23px; color: var(--text-secondary); }
+.more__value { flex: 1; min-width: 0; font-size: 17px; line-height: 25px; font-weight: 500; }
+.more__chevron { color: var(--ink); transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1); }
+.more[open]:not(.is-closing) .more__chevron { transform: rotate(180deg); }
+.more__body { padding: 0 0 12px; }
+
+/* ---------- Impact blocks ---------- */
+.block { display: grid; gap: 4px; padding: 16px 0; border-bottom: 1px solid var(--border-subtle); }
+.block:last-child { border-bottom: 0; }
+.block__label { font-size: 15px; line-height: 23px; color: var(--text-secondary); }
+.block__figure { display: flex; align-items: flex-end; gap: 8px; }
+.block__num { font-size: 44px; line-height: 44px; font-weight: 500; letter-spacing: -0.045em; }
+.block__unit { font-size: 17px; line-height: 25px; }
+.block__rating { margin-left: auto; font-size: 17px; line-height: 25px; font-weight: 500; }
+.block--parts { gap: 8px; }
+.parts { display: grid; gap: 2px; }
+.parts li { display: flex; justify-content: space-between; gap: 16px; font-size: 15px; line-height: 23px; color: var(--text-secondary); }
+.parts li span:last-child { color: var(--text-primary); font-weight: 500; }
+.block__link { font-size: 17px; line-height: 25px; font-weight: 500; }
 
 /* ---------- Notes (Care and end of life) ---------- */
 .notes { display: grid; gap: 8px; }
@@ -228,7 +269,7 @@ h1 { font-weight: 400; }
 .faq:last-child { border-bottom: 0; }
 .faq__q {
   display: flex; align-items: center; justify-content: space-between; gap: 16px; list-style: none; cursor: pointer;
-  padding: 16px var(--bleed); margin-inline: calc(var(--bleed) * -1); border-radius: 8px;
+  padding: 16px var(--bleed); margin-inline: calc(var(--bleed) * -1); border-radius: var(--r);
   font-size: 17px; line-height: 24px; font-weight: 500;
 }
 .faq__q::-webkit-details-marker { display: none; }
@@ -237,7 +278,7 @@ h1 { font-weight: 400; }
 .faq .i-minus { display: none; }
 .faq[open]:not(.is-closing) .i-plus { display: none; }
 .faq[open]:not(.is-closing) .i-minus { display: block; }
-.faq__a { margin-top: 12px; padding-bottom: 16px; font-size: 16px; line-height: 24px; color: var(--text-secondary); }
+.faq__a { margin: 12px 0 16px; padding: 12px; border-radius: var(--r); background: var(--surface-subtle); font-size: 16px; line-height: 24px; }
 
 /* ---------- Report form ---------- */
 .form { display: grid; }
@@ -261,7 +302,7 @@ select.field__control {
 
 .btn {
   display: flex; align-items: center; justify-content: center; width: 100%; min-height: 58px; padding: 16px;
-  border: 0; border-radius: 2px;
+  border: 0; border-radius: var(--r);
   background: var(--action-primary); color: var(--text-on-accent);
   font-size: 17px; line-height: 26px; font-weight: 500;
 }
@@ -292,7 +333,7 @@ select.field__control {
   .lang-sheet, .lang-sheet::backdrop { transition: none; }
 }
 .lang-sheet__grabber { display: flex; justify-content: center; padding-bottom: 8px; }
-.lang-sheet__grabber span { width: 36px; height: 4px; border-radius: 2px; background: var(--border-default); }
+.lang-sheet__grabber span { width: 36px; height: 4px; border-radius: var(--r); background: var(--border-default); }
 .lang-sheet__head { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px 16px var(--gutter); }
 .lang-sheet__head h2 { font-size: 24px; line-height: 28px; font-weight: 600; }
 .lang-list { flex: 1; min-height: 0; overflow-y: auto; padding: 0 var(--gutter) env(safe-area-inset-bottom); }

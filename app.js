@@ -82,8 +82,14 @@
     setTimeout(finish, (opening ? 340 : 280) + 80); // safety net if the animation never reports finished (hidden tab)
     grow.oncancel = () => { if (d._anim === grow) { d._anim = null; d.style.overflow = ''; } };
   };
-  $$('details.step__content, details.faq').forEach((d) => {
-    d.querySelector('summary').addEventListener('click', (e) => { e.preventDefault(); toggleDetails(d); });
+  const steps = $$('details.step__content');
+  $$('details.step__content, details.faq, details.more').forEach((d) => {
+    d.querySelector('summary').addEventListener('click', (e) => {
+      e.preventDefault();
+      // One journey step open at a time: opening a step closes the one that was open.
+      if (!d.open && d.classList.contains('step__content')) steps.filter((o) => o !== d && o.open).forEach(toggleDetails);
+      toggleDetails(d);
+    });
   });
 
   /* ---------- Language sheet ---------- */

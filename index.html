@@ -94,29 +94,52 @@
       <!-- Specifications -->
       <section class="section" id="specs" aria-labelledby="specs-title">
         <h2 class="section__title" id="specs-title">Specifications</h2>
-        <dl class="section__body kv">
-          <div class="kv__row"><dt>Battery type</dt><dd>Electric vehicle</dd></div>
-          <div class="kv__row"><dt>Rated capacity</dt><dd>187.5 Ah, 75 kWh</dd></div>
-          <div class="kv__row"><dt>Chemistry</dt><dd>LiFePO₄ cells. Nominal 75 kWh at 400.0 V</dd></div>
-          <div class="kv__row"><dt>Expected lifetime</dt><dd>3000 charge cycles, 12.0 years</dd></div>
-          <div class="kv__row"><dt>Warranty</dt><dd>96 months</dd></div>
-          <div class="kv__row"><dt>Manufacturer &amp; origin</dt><dd>OrigoEV AB, Skellefteå, Sweden</dd></div>
-          <div class="kv__row"><dt>User-replaceable</dt><dd>No</dd></div>
-          <div class="kv__row"><dt>Removable by independent repairer</dt><dd>Yes</dd></div>
-          <div class="kv__row"><dt>Category</dt><dd>Electric Vehicle. Regulated under EU Battery Regulation 2023/1542, separate digital passport regime from ESPR</dd></div>
-        </dl>
+        <div class="section__body">
+          <dl class="figures">
+            <div class="figure"><dt>Rated capacity</dt><dd><span class="figure__num">75</span><span class="figure__unit">kWh</span><span class="figure__extra">187.5 Ah</span></dd></div>
+            <div class="figure"><dt>Expected lifetime</dt><dd><span class="figure__num">3000</span><span class="figure__unit">charge cycles</span><span class="figure__extra">12.0 years</span></dd></div>
+            <div class="figure"><dt>Warranty</dt><dd><span class="figure__num">96</span><span class="figure__unit">months</span></dd></div>
+          </dl>
+          <dl class="kv">
+            <div class="kv__row"><dt>Battery type</dt><dd>Electric vehicle</dd></div>
+            <div class="kv__row"><dt>Chemistry</dt><dd>LiFePO₄ cells. Nominal 75 kWh at 400.0 V</dd></div>
+            <div class="kv__row"><dt>Manufacturer &amp; origin</dt><dd>OrigoEV AB, Skellefteå, Sweden</dd></div>
+            <div class="kv__row"><dt>User-replaceable</dt><dd>No</dd></div>
+            <div class="kv__row"><dt>Removable by independent repairer</dt><dd>Yes</dd></div>
+          </dl>
+          <details class="more">
+            <summary class="more__head"><span class="more__label">Category</span><span class="more__value">Electric Vehicle</span><svg class="glyph glyph--24 more__chevron" aria-hidden="true"><use href="#g-chevron"/></svg></summary>
+            <div class="more__body"><p class="card-block">Regulated under EU Battery Regulation 2023/1542, separate digital passport regime from ESPR</p></div>
+          </details>
+        </div>
       </section>
 
       <!-- Impact -->
       <section class="section" id="impact" aria-labelledby="impact-title">
         <h2 class="section__title" id="impact-title">Impact</h2>
-        <dl class="section__body kv">
-          <div class="kv__row"><dt>Carbon footprint</dt><dd>58 kg CO₂e per kWh<br>Rating B</dd></div>
-          <div class="kv__row"><dt>Recycled materials: lithium</dt><dd>6%<br>From factory offcuts: lithium 2%. From recycled products: lithium 4%</dd></div>
-          <div class="kv__row"><dt>Renewable materials</dt><dd>3%</dd></div>
-          <div class="kv__row"><dt>Carbon footprint study</dt><dd><!-- TODO: the brand has not supplied the study URL; until then the link does nothing (see app.js) -->
-            <a class="link" href="#" data-todo="carbon-study-url">Read the carbon footprint <span class="nowrap">study<svg class="icon link__icon" aria-hidden="true"><use href="#i-ext"/></svg></span></a></dd></div>
-        </dl>
+        <div class="section__body blocks">
+          <div class="block">
+            <p class="block__label">Carbon footprint</p>
+            <p class="block__figure"><span class="block__num">58</span><span class="block__unit">kg CO₂e per kWh</span><span class="block__rating">Rating B</span></p>
+          </div>
+          <div class="block block--parts">
+            <p class="block__label">Recycled materials: lithium</p>
+            <p class="block__figure"><span class="block__num">6%</span></p>
+            <ul class="parts">
+              <li><span>From factory offcuts: lithium</span><span>2%</span></li>
+              <li><span>From recycled products: lithium</span><span>4%</span></li>
+            </ul>
+          </div>
+          <div class="block">
+            <p class="block__label">Renewable materials</p>
+            <p class="block__figure"><span class="block__num">3%</span></p>
+          </div>
+          <div class="block">
+            <p class="block__label">Carbon footprint study</p>
+            <p class="block__link"><!-- TODO: the brand has not supplied the study URL; until then the link does nothing (see app.js) -->
+              <a class="link" href="#" data-todo="carbon-study-url">Read the carbon footprint <span class="nowrap">study<svg class="icon link__icon" aria-hidden="true"><use href="#i-ext"/></svg></span></a></p>
+          </div>
+        </div>
       </section>
 
       <!-- Journey (938): timeline -->
@@ -132,7 +155,7 @@
                 <span class="step__top"><span class="step__stage">Made</span><svg class="glyph glyph--24 step__chevron" aria-hidden="true"><use href="#g-chevron"/></svg></span>
                 <span class="step__sub">OrigoEV Cell &amp; Pack Plant, Skellefteå, Sweden</span>
               </summary>
-              <div class="step__panel"><p class="step__body">Pack assembled and end-of-line tested.</p></div>
+              <div class="step__panel"><div class="card-block"><p class="step__body">Pack assembled and end-of-line tested.</p></div></div>
             </details>
           </li>
           <li class="step">
@@ -143,7 +166,7 @@
                 <span class="step__top"><span class="step__stage">Shipped from</span><svg class="glyph glyph--24 step__chevron" aria-hidden="true"><use href="#g-chevron"/></svg></span>
                 <span class="step__sub">OrigoEV Logistics, Skellefteå, Sweden</span>
               </summary>
-              <div class="step__panel"><p class="step__body">Shipped to fleet operator.</p></div>
+              <div class="step__panel"><div class="card-block"><p class="step__body">Shipped to fleet operator.</p></div></div>
             </details>
           </li>
           <li class="step">
@@ -154,7 +177,7 @@
                 <span class="step__top"><span class="step__stage">Installed</span><svg class="glyph glyph--24 step__chevron" aria-hidden="true"><use href="#g-chevron"/></svg></span>
                 <span class="step__sub">Nordic Taxi Fleet (demo), Umeå, Sweden</span>
               </summary>
-              <div class="step__panel"><p class="step__body">Fitted to a fleet taxi; BMS feed connected.</p></div>
+              <div class="step__panel"><div class="card-block"><p class="step__body">Fitted to a fleet taxi; BMS feed connected.</p></div></div>
             </details>
           </li>
           <li class="step">
@@ -165,10 +188,7 @@
                 <span class="step__top"><span class="step__stage">Collected for take-back</span><svg class="glyph glyph--24 step__chevron" aria-hidden="true"><use href="#g-chevron"/></svg></span>
                 <span class="step__sub">Authorised EV service network, Skellefteå EV Service Centre, Sweden</span>
               </summary>
-              <div class="step__panel">
-                <p class="step__body">Pack removed at fleet retirement under high-voltage SOP. State-of-health logged at 82%, no thermal events, packaged per ADR §188 for second-life assessment.</p>
-                <p class="step__more">SOH 82%, ADR §188, second-life candidate</p>
-              </div>
+              <div class="step__panel"><div class="card-block"><p class="step__body">Pack removed at fleet retirement under high-voltage SOP. State-of-health logged at 82%, no thermal events, packaged per ADR §188 for second-life assessment.</p></div></div>
             </details>
           </li>
           <li class="step">
@@ -177,12 +197,9 @@
               <summary class="step__head">
                 <time class="step__date" datetime="2026-07-21">21 Jul 2026</time>
                 <span class="step__top"><span class="step__stage">Sorted</span><svg class="glyph glyph--24 step__chevron" aria-hidden="true"><use href="#g-chevron"/></svg></span>
-                <span class="step__sub">OrigoLoop Recycling AB, OrigoLoop Recycling, Skellefteå, Sweden</span>
+                <span class="step__sub">OrigoLoop Recycling AB, Skellefteå, Sweden</span>
               </summary>
-              <div class="step__panel">
-                <p class="step__body">Intake grading: capacity test 82% of rated, insulation and cell-balance within limits. Released for stationary repurposing instead of recycling.</p>
-                <p class="step__more">graded: second life, capacity 82%, no cell replacement</p>
-              </div>
+              <div class="step__panel"><div class="card-block"><p class="step__body">Intake grading: capacity test 82% of rated, insulation and cell-balance within limits. Released for stationary repurposing instead of recycling.</p><p class="step__fact">no cell replacement</p></div></div>
             </details>
           </li>
           <li class="step step--current">
@@ -193,10 +210,10 @@
                 <span class="step__top"><span class="step__stage">Given a second life</span><svg class="glyph glyph--24 step__chevron" aria-hidden="true"><use href="#g-chevron"/></svg></span>
                 <span class="step__sub">OrigoLoop Recycling AB</span>
               </summary>
-              <div class="step__panel">
+              <div class="step__panel"><div class="card-block">
+                <p class="step__product">OrigoStore 60 kWh stationary pack</p>
                 <p class="step__body">First life ended; passport re-issued as <a class="link" href="https://www.origovero.com/b2c/product/SCT-2026-fb5aac698704" target="_blank" rel="noopener">SCT-2026-fb5aac698704<svg class="icon link__icon" aria-hidden="true"><use href="#i-ext"/></svg><span class="sr-only"> (opens another passport)</span></a> (repurposed).</p>
-                <p class="step__more">repurposed, linked passport SCT-2026-fb5aac698704</p>
-              </div>
+              </div></div>
             </details>
           </li>
         </ol>

@@ -54,7 +54,8 @@ Two brand colours from the logo: ink `#1B1B19` and gold `#D4AF37`. Gold is used 
 
 - **Keyboard focus ring** (2 px ink) is kept for accessibility, although the Figma state sheet does not draw it.
 - **Header is sticky**; Figma frames are static.
-- **Carbon footprint study** is plain text, as in Figma. There is no URL for it in the data.
+- **Carbon footprint study** is drawn as a link with an arrow (↗), as in Figma, but there is no URL for it in the data: the link does nothing until the brand supplies one (`data-todo="carbon-study-url"` in `index.html`).
+- **Link arrow** is an SVG icon instead of the ↗ text glyph, so it looks the same in every browser.
 - **Photo** is hot-linked from origovero.com; replace it with a local asset.
 - **Report form** has no backend. Submit simulates the loading state, then shows a confirmation.
 - **Language list** (English, Svenska, Nederlands, Deutsch, Français, Español, Italiano, Polski, Dansk, Suomi, Українська) is a placeholder set from the mockup.

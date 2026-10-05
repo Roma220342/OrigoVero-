@@ -203,6 +203,8 @@ h1 { font-weight: 400; }
 
 .link { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
 .link:active { color: var(--text-secondary); }
+.link__icon { width: 16px; height: 16px; margin-left: 4px; vertical-align: -2px; } /* says "this leaves the page"; icons are not underlined */
+.nowrap { white-space: nowrap; }
 
 /* ---------- Key-value rows (Impact, Specifications) ---------- */
 .kv__row { display: flex; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }

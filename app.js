@@ -71,6 +71,10 @@
   sheet.addEventListener('click', (e) => { if (e.target === sheet) sheet.close(); }); // tap on the scrim
   options.forEach((o) => o.addEventListener('click', () => { select(o); sheet.close(); }));
 
+  /* ---------- Placeholder links ---------- */
+  // The carbon footprint study has no URL in the data yet; keep the link from jumping to the top of the page.
+  $$('a[data-todo]').forEach((a) => a.addEventListener('click', (e) => e.preventDefault()));
+
   /* ---------- Report form ---------- */
   const form = $('#report-form');
   const send = $('#send');

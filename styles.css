@@ -1,5 +1,5 @@
-/* OrigoVero — Digital Product Passport (mobile)
-   Built 1:1 from the Figma file "OrigoVero Digital Product Passport — mobile".
+/* OrigoVero — Digital Product Passport (mobile), Swiss style.
+   Built 1:1 from the Figma frames "Passport / Battery (tabs + language)" and its states.
    Section heights in the comments are the Figma frame heights; styles.css reproduces them. */
 
 /* ---------- Tokens ----------
@@ -8,10 +8,10 @@
 :root {
   --ink: #1b1b19;
   --gold: #d4af37;
+  --gold-100: #f4ebc9;
   --gold-pressed: #bb9a30;
   --paper: #ffffff;
   --frame: #f2f1ee;
-  --night: #1f1f1d;
   --muted: #63635f;
   --line: #e4e4e0;
   --line-strong: #bfbfba;
@@ -19,10 +19,8 @@
 
   --surface-default: var(--paper);
   --surface-subtle: var(--frame);
-  --surface-inverse: var(--night);
   --text-primary: var(--ink);
   --text-secondary: var(--muted);
-  --text-inverse: var(--paper);
   --text-on-accent: var(--ink);
   --text-error: var(--alert);
   --border-subtle: var(--line);
@@ -36,7 +34,9 @@
   --page: 402px;
   --gutter: 24px;
   --bar-h: 64px;
-  --bleed: 12px; /* pressed tint extends this far past the text edge */
+  --tabs-h: 48px;
+  --header-h: 112px; /* top bar 64 + tabs 48 */
+  --bleed: 12px;     /* pressed tint extends this far past the text edge */
 }
 
 * { box-sizing: border-box; }
@@ -91,18 +91,31 @@ img { display: block; }
 :focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; border-radius: 4px; }
 
 .icon { width: 24px; height: 24px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-.icon--chevron { width: 16px; height: 16px; color: var(--text-secondary); }
+.glyph { flex: none; fill: currentColor; stroke: none; }
+.glyph--20 { width: 20px; height: 20px; }
+.glyph--24 { width: 24px; height: 24px; }
 
-/* ---------- Top bar (64) ---------- */
-.topbar {
+/* ---------- Header (112): top bar 64 + tabs 48 ---------- */
+.header {
   position: sticky; top: 0; z-index: 20;
+  background: var(--surface-default);
+}
+.topbar {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
   height: var(--bar-h);
   padding: 0 12px 0 var(--gutter);
-  background: var(--surface-default);
 }
 .lockup { display: flex; align-items: center; gap: 4px; font-size: 14px; line-height: 20px; color: var(--text-secondary); }
 .wordmark { width: 81px; height: 20px; }
+
+/* Language button: "EN" + chevron, no fill and no outline. 48px high tap area. */
+.lang-btn {
+  display: flex; align-items: center; flex: none;
+  height: 48px; padding: 12px; border: 0; border-radius: 8px; background: none;
+  font-size: 16px; line-height: 24px; font-weight: 500; color: var(--text-primary);
+}
+.lang-btn:active { background: var(--surface-subtle); }
+
 .icon-btn {
   display: grid; place-items: center; flex: none;
   width: 48px; height: 48px; padding: 0;
@@ -110,18 +123,42 @@ img { display: block; }
 }
 .icon-btn:active { background: var(--surface-subtle); }
 
-/* ---------- Hero (170) ---------- */
+/* Section tabs: scroll sideways, the active one carries a 2px gold rule over a 2px hairline track */
+.tabs { position: relative; height: var(--tabs-h); }
+.tabs::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+  background: var(--border-subtle); pointer-events: none;
+}
+.tabs__scroll {
+  position: relative; z-index: 1;
+  display: flex; gap: 24px; height: 100%; padding: 0 var(--gutter);
+  overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain;
+}
+.tabs__scroll::-webkit-scrollbar { display: none; }
+.tab {
+  position: relative; display: block; flex: none; white-space: nowrap;
+  height: 100%; padding: 12px 0;
+  font-size: 16px; line-height: 24px; font-weight: 400; color: var(--text-secondary); text-decoration: none;
+}
+.tab[aria-current="true"] { font-weight: 500; color: var(--text-primary); }
+.tab[aria-current="true"]::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--accent);
+}
+
+/* ---------- Hero (178) ---------- */
 .hero { padding: 24px var(--gutter); }
 .hero__brand { display: block; font-size: 38px; line-height: 39px; font-weight: 600; letter-spacing: -0.025em; }
 .hero__product { display: block; margin-top: 8px; font-size: 21px; line-height: 27px; font-weight: 400; }
-.hero__meta { margin-top: 8px; font-size: 14px; line-height: 20px; color: var(--text-secondary); }
 h1 { font-weight: 400; }
+.meta { margin-top: 8px; display: grid; gap: 8px; }
+.meta__row { display: flex; flex-wrap: wrap; gap: 0 20px; }
+.meta__item { display: flex; align-items: center; gap: 4px; font-size: 14px; line-height: 20px; color: var(--text-secondary); }
 
 /* ---------- Photo (281) ---------- */
 .photo { height: 281px; background: var(--surface-subtle); }
 .photo img { width: 100%; height: 100%; object-fit: cover; }
 
-/* ---------- Hero body (675) ---------- */
+/* ---------- Hero body (183) ---------- */
 .hero-body { padding: 0 var(--gutter); display: flow-root; } /* keeps the 32px top margin of .fact inside */
 
 .fact { margin-top: 32px; padding: 16px 0 20px; display: grid; gap: 4px; }
@@ -129,48 +166,38 @@ h1 { font-weight: 400; }
 .fact__text { font-size: 20px; line-height: 26px; font-weight: 500; letter-spacing: -0.012em; }
 .fact__date { font-size: 14px; line-height: 21px; color: var(--text-secondary); }
 
-.index { margin-top: 32px; }
-.index__title { font-size: 15px; line-height: 23px; font-weight: 600; color: var(--text-secondary); }
-.index__list { margin-top: 8px; }
-.index__list li + li { border-top: 1px solid var(--border-default); }
-
-/* Whole row is the tap target; the pressed tint extends past the text edge by --bleed */
-.row-link {
-  display: flex; align-items: center; gap: 16px;
-  padding: 16px var(--bleed);
-  margin-inline: calc(var(--bleed) * -1);
-  border-radius: 8px; text-decoration: none;
-}
-.row-link:active { background: var(--surface-subtle); }
-.row-link__text { flex: 1; min-width: 0; display: grid; gap: 4px; }
-.row-link__title { font-size: 19px; line-height: 26px; font-weight: 500; }
-.row-link__sub { font-size: 15px; line-height: 23px; color: var(--text-secondary); }
-
 /* ---------- Sections ---------- */
-.section { padding: 72px var(--gutter) 0; scroll-margin-top: -8px; }
+/* An anchor jump leaves 36px between the sticky header and the section title (section top is 72px above its title). */
+.section { padding: 72px var(--gutter) 0; scroll-margin-top: calc(var(--header-h) - 36px); }
 #top { scroll-margin-top: 0; }
 .section__title { font-size: 28px; line-height: 31px; font-weight: 600; letter-spacing: -0.025em; }
 .section__lead { margin-top: 12px; font-size: 17px; line-height: 25px; color: var(--text-secondary); }
 .section__body { margin-top: 24px; }
-.section__lead + .section__body { margin-top: 24px; }
 
-/* ---------- Journey steps (accordion) ---------- */
-.step { border-bottom: 1px solid var(--border-subtle); }
-.steps > li:last-child > .step { border-bottom: 0; }
+/* ---------- Journey timeline ---------- */
+.step { display: flex; gap: 16px; }
+.step__rail { flex: none; width: 20px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.step__node { display: flex; justify-content: center; width: 14px; padding-top: 4px; }
+.step__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ink); }
+.step__line { flex: 1; width: 2px; background: var(--border-default); }
+.step--current .step__node { padding-top: 3px; }
+.step--current .step__dot { width: 14px; height: 14px; background: var(--gold); box-shadow: 0 0 0 5px var(--gold-100); }
+
+.step__content { flex: 1; min-width: 0; padding-bottom: 28px; }
+.step--current .step__content { padding-bottom: 0; }
 .step__head {
-  display: grid; gap: 4px; list-style: none; cursor: pointer;
-  padding: 16px var(--bleed); margin-inline: calc(var(--bleed) * -1); border-radius: 8px;
+  display: grid; gap: 2px; list-style: none; cursor: pointer;
+  padding: 8px; margin: -8px; border-radius: 12px; /* pressed tint reaches 8px past the text, layout unchanged */
 }
 .step__head::-webkit-details-marker { display: none; }
 .step__head:active { background: var(--surface-subtle); }
-.step[open] > .step__head { padding-bottom: 4px; }
+.step__date { font-size: 14px; line-height: 21px; color: var(--text-secondary); }
 .step__top { display: flex; align-items: center; gap: 8px; }
 .step__stage { flex: 1; min-width: 0; font-size: 19px; line-height: 24px; font-weight: 500; overflow-wrap: anywhere; }
-.step__date { font-size: 14px; line-height: 21px; color: var(--text-secondary); white-space: nowrap; }
-.step[open] .icon--chevron { transform: rotate(180deg); }
-.icon--chevron { transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1); }
+.step__chevron { color: var(--ink); transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1); }
+.step__content[open] .step__chevron { transform: rotate(180deg); }
 .step__sub { font-size: 15px; line-height: 23px; color: var(--text-secondary); }
-.step__panel { display: grid; gap: 4px; padding-bottom: 16px; }
+.step__panel { display: grid; gap: 4px; padding-top: 10px; } /* 2px content gap + 8px panel padding in Figma */
 .step__body { font-size: 16px; line-height: 24px; }
 .step__more { font-size: 15px; line-height: 23px; color: var(--text-secondary); }
 
@@ -239,21 +266,27 @@ select.field__control {
 /* ---------- Footer (spacer 56 + 77) ---------- */
 .footer { margin-top: 56px; padding: 24px var(--gutter) 32px; font-size: 14px; line-height: 21px; color: var(--text-secondary); }
 
-/* ---------- Full-screen menu ---------- */
-.menu {
-  width: 100%; max-width: var(--page); height: 100%; max-height: none;
-  margin: 0 auto; padding: 0; border: 0;
+/* ---------- Language sheet (bottom sheet, 640 high) ---------- */
+.lang-sheet {
+  position: fixed; inset: auto 0 0 0; margin: 0 auto;
+  width: 100%; max-width: var(--page); height: 640px; max-height: calc(100dvh - 24px);
+  padding: 12px 0 0; border: 0;
+  display: none; flex-direction: column;
   background: var(--surface-default); color: var(--text-primary);
 }
-.menu::backdrop { background: var(--surface-default); }
-.menu__list { display: grid; gap: 4px; padding: 32px var(--gutter) 0; }
-.menu__item {
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  padding: 10px var(--bleed); margin-inline: calc(var(--bleed) * -1);
-  border-radius: 8px; text-decoration: none;
-  font-size: 30px; line-height: 38px; font-weight: 400; letter-spacing: -0.02em; color: var(--text-secondary);
+.lang-sheet[open] { display: flex; }
+.lang-sheet::backdrop { background: rgba(27, 27, 25, 0.45); }
+.lang-sheet__grabber { display: flex; justify-content: center; padding-bottom: 8px; }
+.lang-sheet__grabber span { width: 36px; height: 4px; border-radius: 2px; background: var(--border-default); }
+.lang-sheet__head { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px 16px var(--gutter); }
+.lang-sheet__head h2 { font-size: 24px; line-height: 28px; font-weight: 600; }
+.lang-list { flex: 1; min-height: 0; overflow-y: auto; padding: 0 var(--gutter) env(safe-area-inset-bottom); }
+.lang-list li { border-bottom: 1px solid var(--border-subtle); }
+.lang {
+  display: flex; align-items: center; justify-content: space-between; width: 100%; height: 56px; padding: 0;
+  border: 0; background: none; text-align: left; font-size: 18px; line-height: 24px; font-weight: 400;
 }
-.menu__item:active { background: var(--surface-subtle); color: var(--text-primary); }
-.menu__item[aria-current="true"] { font-weight: 500; color: var(--text-primary); border-bottom: 3px solid var(--accent); border-radius: 8px 8px 0 0; }
-.menu__item .icon { display: none; width: 22px; height: 22px; }
-.menu__item[aria-current="true"] .icon { display: block; }
+.lang:active { background: var(--surface-subtle); }
+.lang__check { width: 22px; height: 22px; visibility: hidden; }
+.lang[aria-checked="true"] { font-weight: 600; }
+.lang[aria-checked="true"] .lang__check { visibility: visible; }

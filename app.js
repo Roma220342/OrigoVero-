@@ -1,40 +1,75 @@
-// OrigoVero passport — behaviour: full-screen menu, current-section marker, report form states.
+// OrigoVero passport — behaviour: section tabs that follow the scroll, language sheet, report form states.
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
-  /* ---------- Menu ---------- */
-  const menu = $('#menu');
-  const openBtn = $('#menu-open');
-  const closeBtn = $('#menu-close');
-  const items = $$('.menu__item');
-  const sectionIds = items.map((a) => a.dataset.target);
+  /* ---------- Section tabs ---------- */
+  const tabsScroll = $('#tabs-scroll');
+  const tabs = $$('.tab');
+  const sectionIds = tabs.map((a) => a.dataset.target);
 
-  // Current section = the last one whose top has passed just under the sticky bar.
+  // Current section = the last one whose top has passed just under the sticky header.
+  const LINE = 112 + 8;
   const currentSection = () => {
-    const line = 64 + 24;
     let current = 'top';
     for (const id of sectionIds) {
       if (id === 'top') continue;
       const el = document.getElementById(id);
-      if (el && el.getBoundingClientRect().top <= line + 72) current = id;
+      if (el && el.getBoundingClientRect().top <= LINE) current = id;
     }
     return current;
   };
-  const markCurrent = () => {
-    const now = currentSection();
-    items.forEach((a) => a.setAttribute('aria-current', a.dataset.target === now ? 'true' : 'false'));
-  };
 
-  openBtn.addEventListener('click', () => {
-    markCurrent();
-    menu.showModal();
-    openBtn.setAttribute('aria-expanded', 'true');
-  });
-  const closeMenu = () => { if (menu.open) menu.close(); };
-  closeBtn.addEventListener('click', closeMenu);
-  menu.addEventListener('close', () => openBtn.setAttribute('aria-expanded', 'false'));
-  items.forEach((a) => a.addEventListener('click', closeMenu)); // default navigation then scrolls to the section
+  let shown = null;
+  const markCurrent = (forced) => {
+    const now = forced || currentSection();
+    if (now === shown) return;
+    shown = now;
+    tabs.forEach((a) => {
+      const on = a.dataset.target === now;
+      if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+    });
+    // Keep the active tab in view inside the sideways-scrolling strip.
+    const active = tabs.find((a) => a.dataset.target === now);
+    if (active) {
+      const left = Math.max(0, active.offsetLeft - 24);
+      tabsScroll.scrollTo({ left, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    }
+  };
+  let ticking = false;
+  addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { ticking = false; markCurrent(); });
+  }, { passive: true });
+  addEventListener('resize', () => markCurrent());
+  tabs.forEach((a) => a.addEventListener('click', () => markCurrent(a.dataset.target)));
+  markCurrent();
+
+  /* ---------- Language sheet ---------- */
+  // UI only: the page copy is not translated in this demo, so <html lang> is left alone.
+  const sheet = $('#lang-sheet');
+  const openBtn = $('#lang-open');
+  const code = $('#lang-code');
+  const options = $$('.lang');
+  const KEY = 'passport-language';
+
+  const select = (btn, { persist = true } = {}) => {
+    options.forEach((o) => o.setAttribute('aria-checked', o === btn ? 'true' : 'false'));
+    code.textContent = btn.dataset.code;
+    openBtn.setAttribute('aria-label', 'Language: ' + btn.firstChild.textContent.trim());
+    if (persist) { try { localStorage.setItem(KEY, btn.dataset.code); } catch (e) { /* storage may be blocked */ } }
+  };
+  try {
+    const saved = localStorage.getItem(KEY);
+    const match = options.find((o) => o.dataset.code === saved);
+    if (match) select(match, { persist: false });
+  } catch (e) { /* storage may be blocked */ }
+
+  openBtn.addEventListener('click', () => sheet.showModal());
+  $('#lang-close').addEventListener('click', () => sheet.close());
+  sheet.addEventListener('click', (e) => { if (e.target === sheet) sheet.close(); }); // tap on the scrim
+  options.forEach((o) => o.addEventListener('click', () => { select(o); sheet.close(); }));
 
   /* ---------- Report form ---------- */
   const form = $('#report-form');

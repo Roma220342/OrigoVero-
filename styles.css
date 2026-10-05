@@ -139,11 +139,14 @@ img { display: block; }
   position: relative; display: block; flex: none; white-space: nowrap;
   height: 100%; padding: 12px 0;
   font-size: 16px; line-height: 24px; font-weight: 400; color: var(--text-secondary); text-decoration: none;
+  transition: color 0.2s ease;
 }
 .tab[aria-current="true"] { font-weight: 500; color: var(--text-primary); }
-.tab[aria-current="true"]::after {
+.tab::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--accent);
+  opacity: 0; transform: scaleX(0.4); transition: opacity 0.2s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
+.tab[aria-current="true"]::after { opacity: 1; transform: none; }
 
 /* ---------- Hero (178) ---------- */
 .hero { padding: 24px var(--gutter); }
@@ -195,7 +198,7 @@ h1 { font-weight: 400; }
 .step__top { display: flex; align-items: center; gap: 8px; }
 .step__stage { flex: 1; min-width: 0; font-size: 19px; line-height: 24px; font-weight: 500; overflow-wrap: anywhere; }
 .step__chevron { color: var(--ink); transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1); }
-.step__content[open] .step__chevron { transform: rotate(180deg); }
+.step__content[open]:not(.is-closing) .step__chevron { transform: rotate(180deg); }
 .step__sub { font-size: 15px; line-height: 23px; color: var(--text-secondary); }
 .step__panel { display: grid; gap: 4px; padding-top: 10px; } /* 2px content gap + 8px panel padding in Figma */
 .step__body { font-size: 16px; line-height: 24px; }
@@ -228,10 +231,10 @@ h1 { font-weight: 400; }
 }
 .faq__q::-webkit-details-marker { display: none; }
 .faq__q:active { background: var(--surface-subtle); }
-.faq[open] > .faq__q { padding-bottom: 0; }
+.faq[open]:not(.is-closing) > .faq__q { padding-bottom: 0; }
 .faq .i-minus { display: none; }
-.faq[open] .i-plus { display: none; }
-.faq[open] .i-minus { display: block; }
+.faq[open]:not(.is-closing) .i-plus { display: none; }
+.faq[open]:not(.is-closing) .i-minus { display: block; }
 .faq__a { margin-top: 12px; padding-bottom: 16px; font-size: 16px; line-height: 24px; color: var(--text-secondary); }
 
 /* ---------- Report form ---------- */
@@ -299,3 +302,7 @@ select.field__control {
 .lang__check { width: 22px; height: 22px; visibility: hidden; }
 .lang[aria-checked="true"] { font-weight: 600; }
 .lang[aria-checked="true"] .lang__check { visibility: visible; }
+
+/* ---------- Soft state changes (pressed tints, field focus) ---------- */
+.lang-btn, .icon-btn, .step__head, .faq__q, .lang, .btn { transition: background-color 0.15s ease; }
+.field__control { transition: border-color 0.15s ease, color 0.15s ease; }

@@ -28,7 +28,7 @@ Open `http://localhost:8770` and use a 402 px wide viewport (the Figma frame wid
 | `Header` (top bar 64 + `Section tabs` 48) | `.header` (sticky), `.topbar`, `.tabs` |
 | `Language button` (EN + chevron, 48 px tap area) | `.lang-btn` opens `#lang-sheet` |
 | `Section tabs`: active tab = Medium + 2 px gold rule over a 2 px hairline | `.tab[aria-current="true"]`, `.tabs::after` |
-| `Hero` with the verification block (Verified by OrigoVero, How we verify, serial) | `.hero`, `.verified` |
+| `Hero` with the serial number (the page being open already means the passport is verified, so there is no separate badge) | `.hero`, `.verified` |
 | Battery health band (82%, gold on ink) | `.hero-body`, `.fact` |
 | `Journey summary` (57 days from factory to installation) | `.block--sum` |
 | `Map / inline` (240 px, expand button, city-level caption) | `.map`, `#map-view`, Leaflet inside `#map-canvas` |
@@ -56,7 +56,7 @@ End of life 975 (1044), Good to know 354, Report 553. Page 5528 px against 5559 
   In the page it only previews and a tap opens it full screen. The dot travels once from the first stop to the last recorded stop, leaving an ink trail, then rests there with a soft pulse.
   With reduced motion it opens in the final state. In the sheet the map can be moved and zoomed; Previous and Next walk through the steps and the dot follows. Opening adds `#map` to the history, so the system Back button closes the map.
   Coordinates are city level. Tiles come from OpenStreetMap through a grayscale filter; production needs a tile provider with a suitable licence.
-- **How we verify** scrolls to the FAQ and opens the answer about authenticity. **Copy link** copies the address and says “Link copied”.
+- **Copy link** copies the address and says “Link copied”.
 - **Report form**: the reason has no default; sending without one shows “Choose a reason before sending.”.
 - **Language** is UI only: choosing a language updates the button (`EN` → `SV`), remembers it in `localStorage` and closes the sheet. The copy itself is not translated and `<html lang>` is left as is.
 

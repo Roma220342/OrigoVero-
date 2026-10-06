@@ -266,7 +266,7 @@ h1 { font-weight: 400; }
 .map__fallback { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; color: var(--text-secondary); }
 .map__fallback[hidden] { display: none; }
 .map .leaflet-container, .map-sheet .leaflet-container { background: #eeedea; font-family: inherit; }
-.map .leaflet-tile-pane, .map-sheet .leaflet-tile-pane { filter: grayscale(1) contrast(0.78) brightness(1.1); }
+.map .leaflet-tile-pane, .map-sheet .leaflet-tile-pane { transform: translateZ(0); backface-visibility: hidden; filter: grayscale(1) contrast(0.78) brightness(1.1); }
 .map .leaflet-control-attribution, .map-sheet .leaflet-control-attribution { font-size: 11px; line-height: 16px; background: rgba(255, 255, 255, 0.7); color: var(--text-secondary); }
 .map-dot { display: block; width: 14px; height: 14px; box-sizing: border-box; border-radius: 50%; background: var(--ink); border: 2px solid var(--paper); }
 .leaflet-tooltip.map-label { padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; font: 500 14px/20px "Schibsted Grotesk", system-ui, sans-serif; color: var(--ink); white-space: nowrap;

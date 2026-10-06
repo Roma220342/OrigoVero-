@@ -305,7 +305,7 @@
     document.head.append(css, js);
   }));
 
-  const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const ease = (t) => -(Math.cos(Math.PI * t) - 1) / 2;
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
   const createMap = (L, el, interactive, bottomPad) => {
@@ -313,7 +313,7 @@
       zoomControl: false, attributionControl: false, boxZoom: false, keyboard: false, tap: false, scrollWheelZoom: false,
       dragging: interactive, touchZoom: interactive, doubleClickZoom: interactive, zoomSnap: 0.25,
     });
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 14, attribution: '© OpenStreetMap contributors' }).addTo(map);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 14, keepBuffer: 4, attribution: '© OpenStreetMap contributors' }).addTo(map);
     L.control.attribution({ prefix: false, position: 'bottomleft' }).addTo(map);
     const pts = stepData.map((s) => [s.lat, s.lng]);
     const weight = interactive ? 2.5 : 2;
@@ -350,7 +350,7 @@
       else map.fitBounds(bounds, { ...POV, maxZoom: 11, animate: false });
     };
     // Longer legs take longer, so a jump between cities feels like a journey and a step inside a city feels quick.
-    const legMs = (from, to) => Math.round(480 + Math.min(1100, (map.distance([from.lat, from.lng], [to.lat, to.lng]) / 1000) * 12));
+    const legMs = (from, to) => Math.round(700 + Math.min(1000, (map.distance([from.lat, from.lng], [to.lat, to.lng]) / 1000) * 12));
     const move = (to, ms, onFrame, dead) => new Promise((resolve) => {
       const from = at;
       if (!ms || reduceMotion()) { place(to); if (onFrame) onFrame(1); resolve(); return; }
@@ -408,7 +408,7 @@
         await move(stepData[i], ms, () => progress.setLatLngs([...pts.slice(0, i), [at.lat, at.lng]]), dead);
         if (dead()) return;
         progress.setLatLngs(pts.slice(0, i + 1));
-        await wait(i === end ? 0 : 200);
+        await wait(i === end ? 0 : 120);
       }
       if (dead()) return;
       rest(true);

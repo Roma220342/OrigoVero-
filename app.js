@@ -313,17 +313,17 @@
       zoomControl: false, attributionControl: false, boxZoom: false, keyboard: false, tap: false, scrollWheelZoom: false,
       dragging: interactive, touchZoom: interactive, doubleClickZoom: interactive, zoomSnap: 0.25,
     });
-    // While the camera zooms, Leaflet only scales the drawn route, which smears it into a blur. Hide it for the flight and
-    // let it redraw sharp at the end.
-    const el0 = map.getContainer();
-    map.on('zoomstart', () => el0.classList.add('is-zooming'));
-    map.on('zoomend moveend', () => el0.classList.remove('is-zooming'));
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 14, attribution: '© OpenStreetMap contributors' }).addTo(map);
     L.control.attribution({ prefix: false, position: 'bottomleft' }).addTo(map);
     const pts = stepData.map((s) => [s.lat, s.lng]);
     const weight = interactive ? 2.5 : 2;
-    L.polyline(pts, { color: '#1b1b19', weight, opacity: 0.3, lineCap: 'round' }).addTo(map);
+    const base = L.polyline(pts, { color: '#1b1b19', weight, opacity: 0.3, lineCap: 'round' }).addTo(map);
     const progress = L.polyline([], { color: '#1b1b19', weight, lineCap: 'round' }).addTo(map);
+    // While the camera zooms, Leaflet only scales the drawn route, which smears it into a blur. Redraw it sharp on every
+    // frame of the zoom instead (this runs after Leaflet's own scaling handler).
+    map.on('zoom', () => {
+      [base, progress].forEach((l) => { if (l._renderer && l._map) { l._renderer._update(); l._project(); l._update(); } });
+    });
     const north = Math.max(...cities.map((c) => c.lat));
     const markers = [];
     const dotIcon = L.divIcon({ className: 'map-dot-wrap', html: '<span class="map-dot"></span>', iconSize: [14, 14], iconAnchor: [7, 7] });

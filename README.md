@@ -82,3 +82,6 @@ Every step has its own point and the traveller visits all of them in order. The 
 
 ### Map camera and replay
 The camera follows the product. It frames the city of the current step (zoom capped at 12, so street names stay unreadable); a move inside a city only moves the dot, a move to another city flies the camera out and back in over the same time as the dot. This works in the small window and in the full screen map. In the page the journey plays once when the map comes into view, stops when it leaves, plays again when the reader scrolls back, and has a Replay button once it has finished. With reduced motion it shows the final state and the button.
+
+### Dividers
+A hairline sits between two neighbours of one list. The last row of a list has none, so every list ends the same way (`.kv--end`). The same rule is applied in the Figma file.

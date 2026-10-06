@@ -79,3 +79,6 @@ Two brand colours from the logo: ink `#1B1B19` and gold `#D4AF37`. Gold is used 
 
 ### Map: one point per step
 Every step has its own point and the traveller visits all of them in order. The source only gives a city, so steps in the same city are placed on a ~1 km ring around the city centre (schematic, not addresses; the caption says so). In the full screen map the first Previous/Next zooms to the city, and moves inside the city then move only the dot.
+
+### Map camera and replay
+The camera follows the product. It frames the city of the current step (zoom capped at 12, so street names stay unreadable); a move inside a city only moves the dot, a move to another city flies the camera out and back in over the same time as the dot. This works in the small window and in the full screen map. In the page the journey plays once when the map comes into view, stops when it leaves, plays again when the reader scrolls back, and has a Replay button once it has finished. With reduced motion it shows the final state and the button.

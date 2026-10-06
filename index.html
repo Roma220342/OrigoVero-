@@ -21,6 +21,7 @@
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5.5v13M5.5 12h13"/></symbol>
     <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5.5 12h13"/></symbol>
     <symbol id="i-ext" viewBox="0 0 24 24"><path d="M7 17 17 7M8.5 7H17v8.5"/></symbol>
+    <symbol id="i-replay" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5"/></symbol>
     <symbol id="i-expand" viewBox="0 0 24 24"><path d="M5 9V5h4M5 5l5 5M19 9V5h-4M19 5l-5 5M5 15v4h4M5 19l5-5M19 15v4h-4M19 19l-5-5"/></symbol>
     <symbol id="i-prev" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
     <symbol id="i-next" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
@@ -178,6 +179,7 @@
             <span class="map__expand" aria-hidden="true"><svg class="icon"><use href="#i-expand"/></svg></span>
             <p class="map__fallback" id="map-fallback" hidden>Map not available. Every place is named in the steps below.</p>
           </div>
+          <button class="map__replay" id="map-replay" type="button" aria-label="Replay the journey" hidden><svg class="icon" aria-hidden="true"><use href="#i-replay"/></svg></button>
           <p class="map__caption">Locations are city-level, not exact addresses. Steps in one city are spaced apart to stay visible.</p>
           <p class="sr-only">Route: Skellefteå, then Umeå, then back to Skellefteå.</p>
         </div>

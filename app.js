@@ -287,6 +287,8 @@
   const LAST = stepData.length - 1;
   const mapView = $('#map-view');
   const mapFallback = $('#map-fallback');
+  const mapReplay = $('#map-replay');
+  mapReplay.addEventListener('click', () => { if (inline) inline.play(); });
 
   let leafletReady = null;
   const loadLeaflet = () => leafletReady || (leafletReady = new Promise((resolve, reject) => {
@@ -327,7 +329,7 @@
       const top = c.lat === north;
       const anchor = L.latLng(c.many ? c.lat + SPREAD : c.lat, c.lng);
       const label = L.marker(anchor, { icon: L.divIcon({ className: 'map-anchor', iconSize: [0, 0] }), interactive: false, keyboard: false }).addTo(map);
-      label.bindTooltip(c.city, { permanent: true, direction: top || c.many ? 'top' : 'left', offset: top || c.many ? [0, -10] : [-12, 0], className: 'map-label' });
+      label.bindTooltip(c.city, { permanent: true, direction: top || c.many ? 'top' : 'left', offset: top || c.many ? [0, -10] : [-20, 0], className: 'map-label' });
     });
     const trav = L.marker(pts[0], {
       icon: L.divIcon({ className: 'trav', html: '<span class="trav__pulse"></span><span class="trav__pulse trav__pulse--2"></span><span class="trav__dot"></span>', iconSize: [1, 1], iconAnchor: [0, 0] }),
@@ -336,8 +338,15 @@
     const travEl = () => trav.getElement();
     let at = { lat: stepData[0].lat, lng: stepData[0].lng };
     const place = (p) => { at = { lat: p.lat, lng: p.lng }; trav.setLatLng([p.lat, p.lng]); };
-    const fit = (animate) => map.fitBounds(L.latLngBounds(pts), { paddingTopLeft: [64, bottomPad > 100 ? 80 : 44], paddingBottomRight: [64, bottomPad], animate: !!animate, maxZoom: 11 });
-    const move = (to, ms, onFrame) => new Promise((resolve) => {
+    const POV = { paddingTopLeft: [64, bottomPad > 100 ? 80 : 40], paddingBottomRight: [64, bottomPad] };
+    const fit = (animate, ms) => {
+      const bounds = L.latLngBounds(pts);
+      if (animate && !reduceMotion()) map.flyToBounds(bounds, { ...POV, maxZoom: 11, duration: (ms || 1100) / 1000 });
+      else map.fitBounds(bounds, { ...POV, maxZoom: 11, animate: false });
+    };
+    // Longer legs take longer, so a jump between cities feels like a journey and a step inside a city feels quick.
+    const legMs = (from, to) => Math.round(480 + Math.min(1100, (map.distance([from.lat, from.lng], [to.lat, to.lng]) / 1000) * 12));
+    const move = (to, ms, onFrame, dead) => new Promise((resolve) => {
       const from = at;
       if (!ms || reduceMotion()) { place(to); if (onFrame) onFrame(1); resolve(); return; }
       const t0 = performance.now();
@@ -346,41 +355,64 @@
         const e = ease(k);
         place({ lat: from.lat + (to.lat - from.lat) * e, lng: from.lng + (to.lng - from.lng) * e });
         if (onFrame) onFrame(e);
-        if (k < 1) requestAnimationFrame(tick); else resolve();
+        if (k < 1 && !(dead && dead())) requestAnimationFrame(tick); else resolve();
       };
       requestAnimationFrame(tick);
     });
     const rest = (on) => { const e = trav.getElement(); if (e) e.classList.toggle('is-resting', on); };
     const drawAll = () => progress.setLatLngs(pts);
-    // Focus: the sheet zooms to the step's city; moves inside the city then only move the dot, so they stay visible.
+    // Camera: it frames the city the product is in. A move inside the city only moves the dot; a move to another city
+    // flies the camera out and back in, over the same time as the dot. Zoom is capped so street names stay unreadable.
     let focused = null;
-    const focus = (i, animate) => {
-      const c = cities.find((x) => x.city === stepData[i].city);
-      if (focused === c.city) return;
+    const focus = (i, animate, ms) => {
+      const s = stepData[i];
+      const c = cities.find((x) => x.city === s.city);
+      if (focused === c.city && map.getBounds().pad(-0.12).contains([s.lat, s.lng])) return;
       focused = c.city;
       const d = SPREAD * 1.5;
       const dl = d / Math.cos((c.lat * Math.PI) / 180);
       const bounds = L.latLngBounds([c.lat - d, c.lng - dl], [c.lat + d, c.lng + dl]);
-      const o = { paddingTopLeft: [48, 80], paddingBottomRight: [48, bottomPad], maxZoom: 13 };
-      if (!animate || reduceMotion()) map.fitBounds(bounds, { ...o, animate: false }); else map.flyToBounds(bounds, { ...o, duration: 0.9 });
+      const o = { paddingTopLeft: [48, bottomPad > 100 ? 80 : 28], paddingBottomRight: [48, bottomPad], maxZoom: 12 };
+      if (!animate || reduceMotion()) map.fitBounds(bounds, { ...o, animate: false }); else map.flyToBounds(bounds, { ...o, duration: (ms || 900) / 1000 });
     };
     const unfocus = () => { focused = null; };
-    let played = false;
-    // The dot visits every step in order and leaves the ink trail behind it, then rests on the last one.
-    const play = async () => {
-      if (played) return;
-      played = true;
-      const end = stepData.length - 1;
-      if (reduceMotion()) { place(stepData[end]); drawAll(); rest(true); return; }
-      for (let i = 1; i <= end; i += 1) {
-        const km = map.distance(pts[i - 1], pts[i]) / 1000;
-        await move(stepData[i], Math.round(380 + Math.min(1000, km * 10)), () => progress.setLatLngs([...pts.slice(0, i), [at.lat, at.lng]]));
-        progress.setLatLngs(pts.slice(0, i + 1));
-        await wait(i === end ? 0 : 220);
-      }
-      rest(true);
+    let run = 0;
+    let running = false;
+    let onState = () => {};
+    const setRunning = (on) => { running = on; onState(on); };
+    const finish = () => {
+      run += 1;
+      place(stepData[stepData.length - 1]); drawAll(); rest(true); unfocus(); fit(false);
+      setRunning(false);
     };
-    return { map, markers, fit, move, rest, drawAll, focus, unfocus, play, isPlayed: () => played };
+    // The camera zooms in on the first step, the dot visits every step in order and leaves the ink trail behind it,
+    // then the camera eases back out to the whole route and the dot rests on the last step.
+    const play = async () => {
+      if (running) return;
+      const id = (run += 1);
+      const dead = () => id !== run;
+      const end = stepData.length - 1;
+      if (reduceMotion()) { finish(); return; }
+      setRunning(true);
+      progress.setLatLngs([]); place(stepData[0]); rest(false); unfocus();
+      focus(0, true, 1000);
+      await wait(1100);
+      for (let i = 1; i <= end && !dead(); i += 1) {
+        const ms = legMs(stepData[i - 1], stepData[i]);
+        focus(i, true, ms);
+        await move(stepData[i], ms, () => progress.setLatLngs([...pts.slice(0, i), [at.lat, at.lng]]), dead);
+        if (dead()) return;
+        progress.setLatLngs(pts.slice(0, i + 1));
+        await wait(i === end ? 0 : 200);
+      }
+      if (dead()) return;
+      rest(true);
+      await wait(500);
+      if (dead()) return;
+      unfocus(); fit(true, 1300);
+      setRunning(false);
+    };
+    return { map, markers, fit, move, rest, drawAll, focus, unfocus, play, finish, legMs, at: () => at, isRunning: () => running, onState: (f) => { onState = f; } };
   };
 
   /* In the page */
@@ -391,9 +423,15 @@
       const L = await loadLeaflet();
       inline = createMap(L, $('#map-canvas'), false, 44);
       inline.fit(false);
+      inline.onState((on) => { mapReplay.hidden = on; });
+      // Plays once when the map comes into view, again each time the reader scrolls back to it, and stops when it leaves.
+      let armed = true;
       const po = new IntersectionObserver((entries) => {
-        if (entries.some((e) => e.isIntersecting)) { po.disconnect(); inline.play(); }
-      }, { threshold: 0.6 });
+        entries.forEach((e) => {
+          if (e.intersectionRatio >= 0.6 && armed) { armed = false; inline.play(); }
+          else if (e.intersectionRatio === 0) { if (inline.isRunning()) inline.finish(); armed = true; }
+        });
+      }, { threshold: [0, 0.6] });
       po.observe(mapView);
     } catch (err) {
       mapFallback.hidden = false;
@@ -428,8 +466,9 @@
     mapNext.disabled = current === LAST;
     if (full) {
       full.rest(current === LAST);
-      full.move({ lat: s.lat, lng: s.lng }, instant ? 0 : 900);
-      if (!instant) full.focus(current, true);
+      const ms = instant ? 0 : full.legMs(full.at(), s);
+      full.move({ lat: s.lat, lng: s.lng }, ms);
+      if (!instant) full.focus(current, true, ms);
     }
   };
   mapPrev.addEventListener('click', () => selectStep(current - 1));

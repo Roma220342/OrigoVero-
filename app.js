@@ -1,4 +1,4 @@
-// OrigoVero passport — behaviour: section tabs that follow the scroll, language sheet, report form states.
+// OrigoVero passport — behaviour: section tabs that follow the scroll, journey map and step viewer, language sheet, report form states.
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -173,9 +173,35 @@
   sheet.addEventListener('touchend', endDrag);
   sheet.addEventListener('touchcancel', endDrag);
 
-  /* ---------- Placeholder links ---------- */
-  // The carbon footprint study has no URL in the data yet; keep the link from jumping to the top of the page.
-  $$('a[data-todo]').forEach((a) => a.addEventListener('click', (e) => e.preventDefault()));
+  /* ---------- "How we verify" opens the answer about authenticity ---------- */
+  $$('[data-open]').forEach((a) => a.addEventListener('click', (e) => {
+    e.preventDefault();
+    const d = document.getElementById(a.dataset.open);
+    if (!d) return;
+    document.getElementById('faq').scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth' });
+    window.setTimeout(() => { if (!d.open) toggleDetails(d); }, reduceMotion() ? 0 : 450);
+  }));
+
+  /* ---------- Copy link ---------- */
+  const copyBtn = $('#copy-link');
+  const copyStatus = $('#copy-status');
+  const COPY_LABEL = copyBtn.textContent;
+  let copyTimer = null;
+  copyBtn.addEventListener('click', async () => {
+    const url = location.href.split('#')[0];
+    let ok = false;
+    try { await navigator.clipboard.writeText(url); ok = true; } catch (err) {
+      const ta = document.createElement('textarea');
+      ta.value = url; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { ok = document.execCommand('copy'); } catch (e2) { ok = false; }
+      ta.remove();
+    }
+    clearTimeout(copyTimer);
+    copyBtn.textContent = ok ? 'Link copied' : 'Could not copy, copy the address from the browser bar';
+    copyStatus.textContent = copyBtn.textContent;
+    copyTimer = setTimeout(() => { copyBtn.textContent = COPY_LABEL; copyStatus.textContent = ''; }, 2600);
+  });
 
   /* ---------- Report form ---------- */
   const form = $('#report-form');
@@ -192,7 +218,16 @@
 
   [details, email, reason].forEach((el) =>
     el.addEventListener('input', () => el.classList.toggle('is-filled', el.value.trim() !== '')));
-  reason.addEventListener('change', () => reason.classList.add('is-filled'));
+  reason.addEventListener('change', () => { reason.classList.add('is-filled'); setReasonInvalid(false); });
+
+  // The reason has no default, so an accidental send cannot file the wrong complaint.
+  const reasonField = reason.closest('.field');
+  const reasonError = $('#reason-error');
+  function setReasonInvalid(bad) {
+    reasonField.classList.toggle('is-invalid', bad);
+    reasonError.hidden = !bad;
+    reason.setAttribute('aria-invalid', bad ? 'true' : 'false');
+  }
 
   const validEmail = (v) => v === '' || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); // optional field
   const setInvalid = (bad) => {
@@ -204,6 +239,7 @@
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+    if (!reason.value) { setReasonInvalid(true); reason.focus(); return; }
     if (!validEmail(email.value.trim())) { setInvalid(true); email.focus(); return; }
     setInvalid(false);
     // Loading state. There is no backend in this demo: the request is simulated.
@@ -219,4 +255,200 @@
       autosize(details);
     }, 900);
   });
+
+  /* ---------- Journey map ---------- */
+  // One component fed by the steps in the page. Leaflet and the tiles load only when the map is near the screen.
+  // In the page the map only previews (a tap opens it); the full screen sheet is where it can be moved and zoomed.
+  // The dot travels once from the first stop to the last recorded one and rests there. With reduced motion it starts at the end.
+  const LEAFLET = 'https://unpkg.com/leaflet@1.9.4/dist/';
+  const stepData = $$('.step[data-step]').sort((a, b) => a.dataset.step - b.dataset.step).map((el) => ({
+    lat: +el.dataset.lat, lng: +el.dataset.lng, city: el.dataset.city, place: el.dataset.place,
+    title: el.querySelector('.step__stage').textContent.trim(),
+    date: el.querySelector('.step__date').textContent.split(',')[0].trim(),
+  }));
+  const cities = [];
+  const route = [];
+  stepData.forEach((s) => {
+    if (!cities.find((c) => c.city === s.city)) cities.push({ city: s.city, lat: s.lat, lng: s.lng });
+    const last = route[route.length - 1];
+    if (!last || last.city !== s.city) route.push({ city: s.city, lat: s.lat, lng: s.lng });
+  });
+  const LAST = stepData.length - 1;
+  const mapView = $('#map-view');
+  const mapFallback = $('#map-fallback');
+
+  let leafletReady = null;
+  const loadLeaflet = () => leafletReady || (leafletReady = new Promise((resolve, reject) => {
+    const css = document.createElement('link');
+    css.rel = 'stylesheet'; css.href = LEAFLET + 'leaflet.css';
+    const js = document.createElement('script');
+    js.src = LEAFLET + 'leaflet.js';
+    let cssDone = false; let jsDone = false;
+    const check = () => { if (cssDone && jsDone) resolve(window.L); };
+    css.onload = () => { cssDone = true; check(); };
+    js.onload = () => { jsDone = true; check(); };
+    const fail = () => { leafletReady = null; reject(new Error('map library')); };
+    css.onerror = fail; js.onerror = fail;
+    document.head.append(css, js);
+  }));
+
+  const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const createMap = (L, el, interactive, bottomPad) => {
+    const map = L.map(el, {
+      zoomControl: false, attributionControl: false, boxZoom: false, keyboard: false, tap: false, scrollWheelZoom: false,
+      dragging: interactive, touchZoom: interactive, doubleClickZoom: interactive, zoomSnap: 0.25,
+    });
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 14, attribution: '© OpenStreetMap contributors' }).addTo(map);
+    L.control.attribution({ prefix: false, position: 'bottomleft' }).addTo(map);
+    const pts = route.map((r) => [r.lat, r.lng]);
+    const weight = interactive ? 2.5 : 2;
+    L.polyline(pts, { color: '#1b1b19', weight, opacity: 0.3, lineCap: 'round' }).addTo(map);
+    const progress = L.polyline([], { color: '#1b1b19', weight, lineCap: 'round' }).addTo(map);
+    const north = Math.max(...cities.map((c) => c.lat));
+    const markers = {};
+    cities.forEach((c) => {
+      const m = L.marker([c.lat, c.lng], {
+        icon: L.divIcon({ className: 'map-dot-wrap', html: '<span class="map-dot"></span>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+        keyboard: false, interactive,
+      }).addTo(map);
+      const top = c.lat === north;
+      m.bindTooltip(c.city, { permanent: true, direction: top ? 'top' : 'left', offset: top ? [0, -12] : [-12, 0], className: 'map-label' });
+      markers[c.city] = m;
+    });
+    const trav = L.marker(pts[0], {
+      icon: L.divIcon({ className: 'trav', html: '<span class="trav__pulse"></span><span class="trav__pulse trav__pulse--2"></span><span class="trav__dot"></span>', iconSize: [1, 1], iconAnchor: [0, 0] }),
+      interactive: false, keyboard: false, zIndexOffset: 1000,
+    }).addTo(map);
+    const travEl = () => trav.getElement();
+    let at = { lat: route[0].lat, lng: route[0].lng };
+    const place = (p) => { at = { lat: p.lat, lng: p.lng }; trav.setLatLng([p.lat, p.lng]); };
+    const fit = (animate) => map.fitBounds(L.latLngBounds(pts), { paddingTopLeft: [64, bottomPad > 100 ? 80 : 44], paddingBottomRight: [64, bottomPad], animate: !!animate, maxZoom: 11 });
+    const move = (to, ms, onFrame) => new Promise((resolve) => {
+      const from = at;
+      if (!ms || reduceMotion()) { place(to); if (onFrame) onFrame(1); resolve(); return; }
+      const t0 = performance.now();
+      const tick = (t) => {
+        const k = Math.min(1, (t - t0) / ms);
+        const e = ease(k);
+        place({ lat: from.lat + (to.lat - from.lat) * e, lng: from.lng + (to.lng - from.lng) * e });
+        if (onFrame) onFrame(e);
+        if (k < 1) requestAnimationFrame(tick); else resolve();
+      };
+      requestAnimationFrame(tick);
+    });
+    const rest = (on) => { const e = trav.getElement(); if (e) e.classList.toggle('is-resting', on); };
+    const drawAll = () => progress.setLatLngs(pts);
+    let played = false;
+    // The dot travels along the route and leaves the ink trail behind it, then rests on the last stop.
+    const play = async () => {
+      if (played) return;
+      played = true;
+      if (reduceMotion()) { place(route[route.length - 1]); drawAll(); rest(true); return; }
+      for (let i = 1; i < route.length; i += 1) {
+        await move(route[i], 1400, () => progress.setLatLngs([...pts.slice(0, i), [at.lat, at.lng]]));
+        progress.setLatLngs(pts.slice(0, i + 1));
+        await wait(240);
+      }
+      rest(true);
+    };
+    return { map, markers, fit, move, rest, drawAll, play, isPlayed: () => played };
+  };
+
+  /* In the page */
+  let inline = null;
+  const initInline = async () => {
+    if (inline) return;
+    try {
+      const L = await loadLeaflet();
+      inline = createMap(L, $('#map-canvas'), false, 44);
+      inline.fit(false);
+      const po = new IntersectionObserver((entries) => {
+        if (entries.some((e) => e.isIntersecting)) { po.disconnect(); inline.play(); }
+      }, { threshold: 0.6 });
+      po.observe(mapView);
+    } catch (err) {
+      mapFallback.hidden = false;
+    }
+  };
+  new IntersectionObserver((entries, o) => {
+    if (entries.some((e) => e.isIntersecting)) { o.disconnect(); initInline(); }
+  }, { rootMargin: '600px 0px' }).observe(mapView);
+
+  /* Full screen sheet with the step viewer */
+  const mapSheet = $('#map-sheet');
+  const mapTitle = $('#map-title');
+  const mapDate = $('#map-date');
+  const mapPlace = $('#map-place');
+  const mapCount = $('#map-count');
+  const mapPrev = $('#map-prev');
+  const mapNext = $('#map-next');
+  mapSheet.setAttribute('tabindex', '-1');
+  let full = null;
+  let cardH = 250;
+  let current = LAST;
+  let mapClosing = false;
+
+  const selectStep = (i, { instant = false } = {}) => {
+    current = Math.max(0, Math.min(LAST, i));
+    const s = stepData[current];
+    mapTitle.textContent = s.title;
+    mapDate.textContent = s.date;
+    mapPlace.textContent = s.place;
+    mapCount.textContent = 'Step ' + (current + 1) + ' of ' + stepData.length;
+    mapPrev.disabled = current === 0;
+    mapNext.disabled = current === LAST;
+    if (full) {
+      full.rest(current === LAST);
+      full.move({ lat: s.lat, lng: s.lng }, instant ? 0 : 650);
+    }
+  };
+  mapPrev.addEventListener('click', () => selectStep(current - 1));
+  mapNext.addEventListener('click', () => selectStep(current + 1));
+
+  const openMap = async () => {
+    if (mapSheet.open) return;
+    let L;
+    try { L = await loadLeaflet(); } catch (err) { mapFallback.hidden = false; return; }
+    mapClosing = false;
+    history.pushState({ map: true }, '', '#map');
+    mapSheet.showModal();
+    mapSheet.focus({ preventScroll: true });
+    if (!full) {
+      cardH = $('.map-card').offsetHeight;
+      mapSheet.style.setProperty('--card-h', cardH + 'px');
+      full = createMap(L, $('#map-full'), true, cardH + 32);
+      full.drawAll();
+      Object.keys(full.markers).forEach((city) => full.markers[city].on('click', () => {
+        for (let i = LAST; i >= 0; i -= 1) if (stepData[i].city === city) { selectStep(i); break; }
+      }));
+    }
+    full.map.invalidateSize();
+    full.fit(false);
+    selectStep(LAST, { instant: true });
+    void mapSheet.offsetHeight;
+    mapSheet.classList.add('is-in');
+  };
+  const closeMapSheet = () => {
+    if (!mapSheet.open || mapClosing) return;
+    mapClosing = true;
+    mapSheet.classList.remove('is-in');
+    const done = () => { if (!mapClosing) return; mapClosing = false; mapSheet.close(); mapView.focus({ preventScroll: true }); };
+    if (reduceMotion()) { done(); return; }
+    mapSheet.addEventListener('transitionend', (e) => { if (e.target === mapSheet && e.propertyName === 'transform') done(); }, { once: true });
+    setTimeout(done, 480);
+  };
+  // Closing goes through the history entry that opening added, so the system Back button closes the map too.
+  const closeMap = () => { if (history.state && history.state.map) history.back(); else closeMapSheet(); };
+  addEventListener('popstate', () => { if (mapSheet.open && !(history.state && history.state.map)) closeMapSheet(); });
+  mapSheet.addEventListener('close', () => mapSheet.classList.remove('is-in'));
+  mapSheet.addEventListener('cancel', (e) => { e.preventDefault(); closeMap(); });
+  $('#map-close').addEventListener('click', closeMap);
+  mapSheet.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); selectStep(current - 1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); selectStep(current + 1); }
+  });
+  mapView.addEventListener('click', openMap);
+  mapView.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openMap(); } });
 })();

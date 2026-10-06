@@ -159,6 +159,7 @@ h1 { font-weight: 400; }
 .meta { margin-top: 8px; display: grid; gap: 8px; }
 .meta__row { display: flex; flex-wrap: wrap; gap: 0 20px; }
 .meta__item { display: flex; align-items: center; gap: 4px; font-size: 14px; line-height: 20px; color: var(--text-secondary); }
+.meta__item--verified { font-weight: 500; color: var(--text-primary); }
 
 /* ---------- Photo (281) ---------- */
 .photo { height: 281px; background: var(--surface-subtle); }
@@ -222,14 +223,9 @@ h1 { font-weight: 400; }
 .kv dd { flex: 1; min-width: 0; font-size: 17px; line-height: 25px; font-weight: 500; overflow-wrap: anywhere; }
 
 /* ---------- Key figures (top of Specifications) ---------- */
-.figures { display: flex; gap: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle); }
-.figure { display: grid; gap: 2px; align-content: start; min-width: 0; }
-.figure:nth-child(1) { flex: 0 0 112px; }
-.figure:nth-child(2) { flex: 0 0 134px; }
-.figure:nth-child(3) { flex: 1; }
+.figures { display: grid; grid-template-columns: 112px 134px 72px; column-gap: 18px; padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle); }
 .figures:not(.figures--2) { border-bottom: 0; padding-bottom: 20px; }
-.figures--2 .figure:nth-child(1) { flex: 0 0 112px; }
-.figures--2 .figure:nth-child(2) { flex: 0 0 100px; }
+.figure { display: grid; gap: 2px; align-content: start; min-width: 0; }
 .group { margin-top: 32px; font-size: 17px; line-height: 25px; font-weight: 500; }
 .group + .kv { margin-top: 4px; }
 .figure dt { font-size: 15px; line-height: 23px; color: var(--text-secondary); white-space: nowrap; }
@@ -237,6 +233,7 @@ h1 { font-weight: 400; }
 .figure__num { font-size: 40px; line-height: 40px; font-weight: 500; letter-spacing: -0.045em; }
 .figure__unit { font-size: 15px; line-height: 23px; font-weight: 500; }
 .figure__extra { font-size: 14px; line-height: 20px; color: var(--text-secondary); }
+@media (max-width: 380px) { .figures { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 12px; } .figure dt { white-space: normal; } .figure__num { font-size: 34px; line-height: 36px; } }
 
 /* ---------- Expandable row (Category) ---------- */
 .more { border-top: 1px solid var(--border-subtle); }

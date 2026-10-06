@@ -76,3 +76,6 @@ Two brand colours from the logo: ink `#1B1B19` and gold `#D4AF37`. Gold is used 
 - **Photo** is hot-linked from origovero.com; replace it with a local asset.
 - **Report form** has no backend. Submit simulates the loading state, then shows a confirmation.
 - **Language list** (English, Svenska, Nederlands, Deutsch, Français, Español, Italiano, Polski, Dansk, Suomi, Українська) is a placeholder set from the mockup.
+
+### Map: one point per step
+Every step has its own point and the traveller visits all of them in order. The source only gives a city, so steps in the same city are placed on a ~1 km ring around the city centre (schematic, not addresses; the caption says so). In the full screen map the first Previous/Next zooms to the city, and moves inside the city then move only the dot.

@@ -266,12 +266,23 @@
     title: el.querySelector('.step__stage').textContent.trim(),
     date: el.querySelector('.step__date').textContent.split(',')[0].trim(),
   }));
+  // Every step gets its own point. Steps in one city are spread on a small ring (about 1 km) around the city centre
+  // so each move is visible; the positions are schematic, the data only says the city.
+  const SPREAD = 0.012;
   const cities = [];
-  const route = [];
   stepData.forEach((s) => {
-    if (!cities.find((c) => c.city === s.city)) cities.push({ city: s.city, lat: s.lat, lng: s.lng });
-    const last = route[route.length - 1];
-    if (!last || last.city !== s.city) route.push({ city: s.city, lat: s.lat, lng: s.lng });
+    let c = cities.find((x) => x.city === s.city);
+    if (!c) { c = { city: s.city, lat: s.lat, lng: s.lng, steps: [] }; cities.push(c); }
+    c.steps.push(s);
+  });
+  cities.forEach((c) => {
+    c.many = c.steps.length > 1;
+    c.steps.forEach((s, k) => {
+      if (!c.many) return;
+      const a = ((120 + k * (360 / c.steps.length)) * Math.PI) / 180;
+      s.lat = c.lat + SPREAD * Math.sin(a);
+      s.lng = c.lng + (SPREAD * Math.cos(a)) / Math.cos((c.lat * Math.PI) / 180);
+    });
   });
   const LAST = stepData.length - 1;
   const mapView = $('#map-view');
@@ -302,27 +313,28 @@
     });
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 14, attribution: '© OpenStreetMap contributors' }).addTo(map);
     L.control.attribution({ prefix: false, position: 'bottomleft' }).addTo(map);
-    const pts = route.map((r) => [r.lat, r.lng]);
+    const pts = stepData.map((s) => [s.lat, s.lng]);
     const weight = interactive ? 2.5 : 2;
     L.polyline(pts, { color: '#1b1b19', weight, opacity: 0.3, lineCap: 'round' }).addTo(map);
     const progress = L.polyline([], { color: '#1b1b19', weight, lineCap: 'round' }).addTo(map);
     const north = Math.max(...cities.map((c) => c.lat));
-    const markers = {};
+    const markers = [];
+    const dotIcon = L.divIcon({ className: 'map-dot-wrap', html: '<span class="map-dot"></span>', iconSize: [14, 14], iconAnchor: [7, 7] });
+    stepData.forEach((s, i) => {
+      markers[i] = L.marker([s.lat, s.lng], { icon: dotIcon, keyboard: false, interactive }).addTo(map);
+    });
     cities.forEach((c) => {
-      const m = L.marker([c.lat, c.lng], {
-        icon: L.divIcon({ className: 'map-dot-wrap', html: '<span class="map-dot"></span>', iconSize: [20, 20], iconAnchor: [10, 10] }),
-        keyboard: false, interactive,
-      }).addTo(map);
       const top = c.lat === north;
-      m.bindTooltip(c.city, { permanent: true, direction: top ? 'top' : 'left', offset: top ? [0, -12] : [-12, 0], className: 'map-label' });
-      markers[c.city] = m;
+      const anchor = L.latLng(c.many ? c.lat + SPREAD : c.lat, c.lng);
+      const label = L.marker(anchor, { icon: L.divIcon({ className: 'map-anchor', iconSize: [0, 0] }), interactive: false, keyboard: false }).addTo(map);
+      label.bindTooltip(c.city, { permanent: true, direction: top || c.many ? 'top' : 'left', offset: top || c.many ? [0, -10] : [-12, 0], className: 'map-label' });
     });
     const trav = L.marker(pts[0], {
       icon: L.divIcon({ className: 'trav', html: '<span class="trav__pulse"></span><span class="trav__pulse trav__pulse--2"></span><span class="trav__dot"></span>', iconSize: [1, 1], iconAnchor: [0, 0] }),
       interactive: false, keyboard: false, zIndexOffset: 1000,
     }).addTo(map);
     const travEl = () => trav.getElement();
-    let at = { lat: route[0].lat, lng: route[0].lng };
+    let at = { lat: stepData[0].lat, lng: stepData[0].lng };
     const place = (p) => { at = { lat: p.lat, lng: p.lng }; trav.setLatLng([p.lat, p.lng]); };
     const fit = (animate) => map.fitBounds(L.latLngBounds(pts), { paddingTopLeft: [64, bottomPad > 100 ? 80 : 44], paddingBottomRight: [64, bottomPad], animate: !!animate, maxZoom: 11 });
     const move = (to, ms, onFrame) => new Promise((resolve) => {
@@ -340,20 +352,35 @@
     });
     const rest = (on) => { const e = trav.getElement(); if (e) e.classList.toggle('is-resting', on); };
     const drawAll = () => progress.setLatLngs(pts);
+    // Focus: the sheet zooms to the step's city; moves inside the city then only move the dot, so they stay visible.
+    let focused = null;
+    const focus = (i, animate) => {
+      const c = cities.find((x) => x.city === stepData[i].city);
+      if (focused === c.city) return;
+      focused = c.city;
+      const d = SPREAD * 1.5;
+      const dl = d / Math.cos((c.lat * Math.PI) / 180);
+      const bounds = L.latLngBounds([c.lat - d, c.lng - dl], [c.lat + d, c.lng + dl]);
+      const o = { paddingTopLeft: [48, 80], paddingBottomRight: [48, bottomPad], maxZoom: 13 };
+      if (!animate || reduceMotion()) map.fitBounds(bounds, { ...o, animate: false }); else map.flyToBounds(bounds, { ...o, duration: 0.9 });
+    };
+    const unfocus = () => { focused = null; };
     let played = false;
-    // The dot travels along the route and leaves the ink trail behind it, then rests on the last stop.
+    // The dot visits every step in order and leaves the ink trail behind it, then rests on the last one.
     const play = async () => {
       if (played) return;
       played = true;
-      if (reduceMotion()) { place(route[route.length - 1]); drawAll(); rest(true); return; }
-      for (let i = 1; i < route.length; i += 1) {
-        await move(route[i], 1400, () => progress.setLatLngs([...pts.slice(0, i), [at.lat, at.lng]]));
+      const end = stepData.length - 1;
+      if (reduceMotion()) { place(stepData[end]); drawAll(); rest(true); return; }
+      for (let i = 1; i <= end; i += 1) {
+        const km = map.distance(pts[i - 1], pts[i]) / 1000;
+        await move(stepData[i], Math.round(380 + Math.min(1000, km * 10)), () => progress.setLatLngs([...pts.slice(0, i), [at.lat, at.lng]]));
         progress.setLatLngs(pts.slice(0, i + 1));
-        await wait(240);
+        await wait(i === end ? 0 : 220);
       }
       rest(true);
     };
-    return { map, markers, fit, move, rest, drawAll, play, isPlayed: () => played };
+    return { map, markers, fit, move, rest, drawAll, focus, unfocus, play, isPlayed: () => played };
   };
 
   /* In the page */
@@ -401,7 +428,8 @@
     mapNext.disabled = current === LAST;
     if (full) {
       full.rest(current === LAST);
-      full.move({ lat: s.lat, lng: s.lng }, instant ? 0 : 650);
+      full.move({ lat: s.lat, lng: s.lng }, instant ? 0 : 900);
+      if (!instant) full.focus(current, true);
     }
   };
   mapPrev.addEventListener('click', () => selectStep(current - 1));
@@ -420,12 +448,11 @@
       mapSheet.style.setProperty('--card-h', cardH + 'px');
       full = createMap(L, $('#map-full'), true, cardH + 32);
       full.drawAll();
-      Object.keys(full.markers).forEach((city) => full.markers[city].on('click', () => {
-        for (let i = LAST; i >= 0; i -= 1) if (stepData[i].city === city) { selectStep(i); break; }
-      }));
+      full.markers.forEach((m, i) => m.on('click', () => selectStep(i)));
     }
     full.map.invalidateSize();
     full.fit(false);
+    full.unfocus();
     selectStep(LAST, { instant: true });
     void mapSheet.offsetHeight;
     mapSheet.classList.add('is-in');

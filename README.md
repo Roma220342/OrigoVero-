@@ -41,8 +41,8 @@ Open `http://localhost:8770` and use a 402 px wide viewport (the Figma frame wid
 | `Language sheet` (640 px, grabber, list of 11 languages, scrim 45 %) | `<dialog class="lang-sheet">` |
 | Interaction states sheet | `:active` (pressed), `.btn[aria-busy]` (loading), `.is-invalid` (error), `:focus` on fields (editing) |
 
-Section heights were checked against Figma: header 112, hero 178, photo 281, hero body 183, Specifications 670,
-Impact 583, Care 259, Good to know 354, Report 553, footer 77. Journey is 1071 px in code against 1059 px in Figma.
+Section heights were checked against Figma: header 112, hero 178, photo 281, hero body 183, Specifications 1027,
+Impact 583, Care 858, Good to know 354, Report 553, footer 77. Journey is 1071 px in code against 1059 px in Figma.
 (Browsers that draw 1 px borders thinner than 1 px can measure a few px short.)
 
 ## Behaviour
@@ -61,7 +61,7 @@ Two brand colours from the logo: ink `#1B1B19` and gold `#D4AF37`. Gold is used 
 
 - **Keyboard focus ring** (2 px ink) is kept for accessibility, although the Figma state sheet does not draw it.
 - **Header is sticky**; Figma frames are static.
-- **Carbon footprint study** is drawn as a link with an arrow (↗), as in Figma, but there is no URL for it in the data: the link does nothing until the brand supplies one (`data-todo="carbon-study-url"` in `index.html`).
+- **Carbon footprint study** and the three documents in Care (responsible sourcing, labels, substance safety) link to the PDFs on origovero.com and open in a new tab.
 - **Link arrow** is an SVG icon instead of the ↗ text glyph, so it looks the same in every browser.
 - **Photo** is hot-linked from origovero.com; replace it with a local asset.
 - **Report form** has no backend. Submit simulates the loading state, then shows a confirmation.

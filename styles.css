@@ -218,7 +218,6 @@ h1 { font-weight: 400; }
 .kv__row { display: flex; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
 .kv__row:last-child { border-bottom: 0; }
 .kv dt { flex: 0 0 110px; font-size: 15px; line-height: 23px; color: var(--text-secondary); overflow-wrap: anywhere; }
-.kv dd.lines { display: grid; gap: 8px; }
 .block--sum { margin-top: 24px; border-bottom: 1px solid var(--border-subtle); }
 .kv dd { flex: 1; min-width: 0; font-size: 17px; line-height: 25px; font-weight: 500; overflow-wrap: anywhere; }
 

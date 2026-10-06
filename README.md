@@ -30,7 +30,6 @@ Open `http://localhost:8770` and use a 402 px wide viewport (the Figma frame wid
 | `Section tabs`: active tab = Medium + 2 px gold rule over a 2 px hairline | `.tab[aria-current="true"]`, `.tabs::after` |
 | `Hero` with `Meta` rows (icon + text pairs) | `.hero`, `.meta` |
 | `Key fact` | `.fact` |
-| `About this unit` section (serial, batch, sold by, substances, documents) | `#about`, `.kv`, `.lines` |
 | `Journey summary` (57 days from factory to you) | `.block--sum` |
 | `Key figures` (75 kWh, 3000 charge cycles, 96 months) at the top of Specifications | `.figures` |
 | Category row that expands | `details.more` |
@@ -43,12 +42,12 @@ Open `http://localhost:8770` and use a 402 px wide viewport (the Figma frame wid
 | Interaction states sheet | `:active` (pressed), `.btn[aria-busy]` (loading), `.is-invalid` (error), `:focus` on fields (editing) |
 
 Section heights were checked against Figma: header 112, hero 178, photo 281, hero body 183, Specifications 670,
-Impact 583, Care 259, Good to know 354, Report 553, footer 77. About this unit (887 px) and Journey (1071 px) are a few px taller in code than in Figma (848 and 1059), so the page is 5264 px against 5245 px.
+Impact 583, Care 259, Good to know 354, Report 553, footer 77. Journey is 1071 px in code against 1059 px in Figma.
 (Browsers that draw 1 px borders thinner than 1 px can measure a few px short.)
 
 ## Behaviour
 
-- **Sections** run Specifications, About this unit, Impact, Journey, Care, Good to know, Report. Everything that expands (journey step, FAQ, Category) opens with a height animation, and opening a journey step closes the previous one.
+- **Sections** run Specifications, Impact, Journey, Care, Good to know, Report. Everything that expands (journey step, FAQ, Category) opens with a height animation, and opening a journey step closes the previous one.
 - **One radius**: every rounded surface uses 4 px (`--r`).
 - **Tabs** scroll sideways; the active tab changes as you scroll and the strip keeps it in view. An anchor jump leaves 36 px between the header and the section title.
 - **Language** is UI only: choosing a language updates the button (`EN` → `SV`), remembers it in `localStorage` and closes the sheet. The copy itself is not translated and `<html lang>` is left as is.

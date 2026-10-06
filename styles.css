@@ -94,7 +94,6 @@ img { display: block; }
 
 .icon { width: 24px; height: 24px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .glyph { flex: none; fill: currentColor; stroke: none; }
-.glyph--20 { width: 20px; height: 20px; }
 .glyph--24 { width: 24px; height: 24px; }
 
 /* ---------- Header (112): top bar 64 + tabs 48 ---------- */
@@ -206,7 +205,6 @@ h1 { font-weight: 400; }
 .step__sub { font-size: 15px; line-height: 22px; color: var(--text-secondary); }
 .step__panel { padding-top: 12px; } /* 2px content gap + 10px above the details card in Figma */
 .step__body { font-size: 17px; line-height: 25px; }
-.step__product { font-size: 17px; line-height: 25px; font-weight: 500; }
 .step__fact { font-size: 15px; line-height: 22px; color: var(--text-secondary); }
 .card-block { display: grid; gap: 4px; padding: 12px; border-radius: var(--r); background: var(--surface-subtle); font-size: 17px; line-height: 25px; }
 .card-block .step__fact { margin-top: 4px; }
@@ -216,7 +214,6 @@ h1 { font-weight: 400; }
 /* Invisible touch area: text links and small buttons reach 44px high without moving anything. */
 .link, .footer__copy { position: relative; }
 .link::after, .footer__copy::after { content: ""; position: absolute; inset: -12px -6px; }
-.nowrap { white-space: nowrap; }
 
 /* ---------- Key-value rows (Impact, Specifications) ---------- */
 .kv__row { display: flex; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
@@ -236,7 +233,6 @@ h1 { font-weight: 400; }
 .figure__line { display: grid; gap: 2px; }
 .figure__num { font-size: 40px; line-height: 40px; font-weight: 500; letter-spacing: -0.04em; }
 .figure__unit { font-size: 15px; line-height: 22px; font-weight: 500; }
-.figure__extra { font-size: 15px; line-height: 22px; color: var(--text-secondary); }
 .kv__sub { margin-left: 6px; font-size: 15px; font-weight: 400; color: var(--text-secondary); white-space: nowrap; }
 @media (max-width: 340px) { .figures { grid-template-columns: repeat(3, minmax(0, 1fr)); } .figure dt { white-space: normal; min-height: 46px; } .figure__num { font-size: 34px; line-height: 36px; } }
 

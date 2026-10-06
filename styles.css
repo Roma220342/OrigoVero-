@@ -157,10 +157,9 @@ img { display: block; }
 .hero__product { display: block; margin-top: 8px; font-size: 21px; line-height: 27px; font-weight: 400; }
 h1 { font-weight: 400; }
 .verified { margin-top: 16px; display: grid; gap: 2px; }
-.verified__row { display: flex; align-items: center; flex-wrap: wrap; gap: 0 16px; }
-.verified__label { display: flex; align-items: center; gap: 6px; font-size: 16px; line-height: 24px; font-weight: 500; }
-.verified__link { font-size: 15px; line-height: 24px; font-weight: 400; color: var(--text-secondary); }
-@media (max-width: 340px) { .verified__link { padding-left: 26px; } }
+.verified__row { display: flex; align-items: center; gap: 6px; min-height: 28px; color: var(--ink); text-decoration: none; }
+.verified__label { font-size: 16px; line-height: 24px; font-weight: 500; }
+.verified__go { color: var(--text-secondary); margin-left: -2px; }
 .verified__serial { padding-left: 26px; font-size: 15px; line-height: 22px; color: var(--text-secondary); overflow-wrap: anywhere; }
 
 /* ---------- Photo (281) ---------- */
@@ -262,9 +261,9 @@ h1 { font-weight: 400; }
 .map__expand { position: absolute; top: 8px; right: 8px; z-index: 500; width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid var(--border-subtle); border-radius: var(--r); background: var(--paper); color: var(--ink); }
 .map__replay { position: absolute; top: 9px; left: 9px; z-index: 501; width: 40px; height: 40px; display: grid; place-items: center; padding: 0; border: 1px solid var(--border-subtle); border-radius: var(--r); background: var(--paper); color: var(--ink); cursor: pointer; }
 .map__replay[hidden] { display: none; }
-.map__replay .icon { width: 20px; height: 20px; stroke-width: 2; }
+.map__replay .glyph { width: 24px; height: 24px; }
 .map__replay:active { background: var(--surface-subtle); }
-.map__expand .icon { width: 20px; height: 20px; stroke-width: 2; }
+.map__expand .glyph { width: 24px; height: 24px; }
 .map__caption { margin-top: 8px; font-size: 15px; line-height: 22px; color: var(--text-secondary); }
 .map__fallback { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; color: var(--text-secondary); }
 .map__fallback[hidden] { display: none; }
@@ -432,6 +431,6 @@ select.field__control {
 .nav-btn { display: grid; place-items: center; width: 48px; height: 48px; padding: 0; border: 1.5px solid var(--ink); border-radius: var(--r); background: none; color: var(--ink); transition: opacity 0.15s ease, background-color 0.15s ease; }
 .nav-btn:active { background: var(--surface-subtle); }
 .nav-btn:disabled { opacity: 0.35; pointer-events: none; }
-.nav-btn .icon { width: 20px; height: 20px; stroke-width: 2; }
+.nav-btn .glyph { width: 24px; height: 24px; }
 @media (prefers-reduced-motion: reduce) { .map-sheet, .map-sheet::backdrop { transition: none; } }
 .map-sheet .leaflet-bottom { bottom: var(--card-h, 250px); }

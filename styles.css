@@ -156,11 +156,12 @@ img { display: block; }
 .hero__brand { display: block; font-size: 38px; line-height: 39px; font-weight: 600; letter-spacing: -0.025em; }
 .hero__product { display: block; margin-top: 8px; font-size: 21px; line-height: 27px; font-weight: 400; }
 h1 { font-weight: 400; }
-.verified { margin-top: 12px; display: grid; gap: 4px; }
-.verified__row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.verified__label { display: flex; align-items: center; gap: 4px; font-size: 16px; line-height: 24px; font-weight: 500; }
-.verified__link { font-size: 15px; line-height: 22px; font-weight: 500; color: var(--text-secondary); }
-.verified__serial { padding-left: 24px; font-size: 15px; line-height: 22px; color: var(--text-secondary); }
+.verified { margin-top: 16px; display: grid; gap: 2px; }
+.verified__row { display: flex; align-items: center; flex-wrap: wrap; gap: 0 16px; }
+.verified__label { display: flex; align-items: center; gap: 6px; font-size: 16px; line-height: 24px; font-weight: 500; }
+.verified__link { font-size: 15px; line-height: 24px; font-weight: 400; color: var(--text-secondary); }
+@media (max-width: 340px) { .verified__link { padding-left: 26px; } }
+.verified__serial { padding-left: 26px; font-size: 15px; line-height: 22px; color: var(--text-secondary); overflow-wrap: anywhere; }
 
 /* ---------- Photo (281) ---------- */
 .photo { height: 281px; background: var(--surface-subtle); }

@@ -357,7 +357,7 @@
     map.whenReady(draw);
     const north = Math.max(...cities.map((c) => c.lat));
     const markers = [];
-    const dotIcon = L.divIcon({ className: 'map-dot-wrap', html: '<span class="map-dot"></span>', iconSize: [14, 14], iconAnchor: [7, 7] });
+    const dotIcon = L.divIcon({ className: 'map-dot-wrap', html: '<span class="map-dot"></span>', iconSize: [44, 44], iconAnchor: [22, 22] });
     stepData.forEach((s, i) => {
       markers[i] = L.marker([s.lat, s.lng], { icon: dotIcon, keyboard: false, interactive }).addTo(map);
     });

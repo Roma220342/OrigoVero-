@@ -317,13 +317,44 @@
     L.control.attribution({ prefix: false, position: 'bottomleft' }).addTo(map);
     const pts = stepData.map((s) => [s.lat, s.lng]);
     const weight = interactive ? 2.5 : 2;
-    const base = L.polyline(pts, { color: '#1b1b19', weight, opacity: 0.3, lineCap: 'round' }).addTo(map);
-    const progress = L.polyline([], { color: '#1b1b19', weight, lineCap: 'round' }).addTo(map);
-    // While the camera zooms, Leaflet only scales the drawn route, which smears it into a blur. Redraw it sharp on every
-    // frame of the zoom instead (this runs after Leaflet's own scaling handler).
-    map.on('zoom', () => {
-      [base, progress].forEach((l) => { if (l._renderer && l._map) { l._renderer._update(); l._project(); l._update(); } });
-    });
+    // The route is drawn on a canvas of our own, in screen pixels, on every frame of a move or zoom. Leaflet's vector
+    // layers only scale their picture while the camera zooms, which made the lines blur and jitter.
+    const routePane = map.createPane('route');
+    routePane.style.zIndex = 450;
+    routePane.style.pointerEvents = 'none';
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'absolute';
+    routePane.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    let prog = [];
+    const stroke = (list, alpha) => {
+      if (list.length < 2) return;
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      list.forEach((ll, i) => {
+        const p = map.latLngToContainerPoint(ll).round();
+        if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+      });
+      ctx.stroke();
+    };
+    const draw = () => {
+      if (!map._loaded) return;
+      const size = map.getSize();
+      const dpr = window.devicePixelRatio || 1;
+      if (canvas.width !== Math.round(size.x * dpr) || canvas.height !== Math.round(size.y * dpr)) {
+        canvas.width = Math.round(size.x * dpr); canvas.height = Math.round(size.y * dpr);
+        canvas.style.width = size.x + 'px'; canvas.style.height = size.y + 'px';
+      }
+      L.DomUtil.setPosition(canvas, map.containerPointToLayerPoint([0, 0]).round());
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, size.x, size.y);
+      ctx.strokeStyle = '#1b1b19'; ctx.lineWidth = weight; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      stroke(pts, 0.3);
+      stroke(prog, 1);
+    };
+    const progress = { setLatLngs: (list) => { prog = list; draw(); } };
+    map.on('move zoom moveend zoomend viewreset resize', draw);
+    map.whenReady(draw);
     const north = Math.max(...cities.map((c) => c.lat));
     const markers = [];
     const dotIcon = L.divIcon({ className: 'map-dot-wrap', html: '<span class="map-dot"></span>', iconSize: [14, 14], iconAnchor: [7, 7] });

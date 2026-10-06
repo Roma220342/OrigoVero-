@@ -166,8 +166,8 @@ h1 { font-weight: 400; }
 /* ---------- Hero body (183) ---------- */
 .hero-body { background: var(--ink); color: var(--paper); padding: 48px var(--gutter) 20px; }
 .fact { display: grid; gap: 4px; }
-.fact__figure { font-size: 64px; line-height: 60px; font-weight: 500; letter-spacing: -0.04em; color: var(--gold); }
-.fact__text { font-size: 20px; line-height: 26px; font-weight: 500; }
+.fact__figure { font-size: 40px; line-height: 40px; font-weight: 500; letter-spacing: -0.04em; color: var(--gold); }
+.fact__text { font-size: 17px; line-height: 25px; font-weight: 500; }
 .fact__date { font-size: 15px; line-height: 22px; color: rgba(255, 255, 255, 0.72); }
 
 /* ---------- Sections ---------- */

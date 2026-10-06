@@ -48,6 +48,7 @@
         <ul class="tabs__scroll" id="tabs-scroll">
           <li><a class="tab" href="#top" data-target="top" aria-current="true">Overview</a></li>
           <li><a class="tab" href="#specs" data-target="specs">Specifications</a></li>
+          <li><a class="tab" href="#about" data-target="about">About this unit</a></li>
           <li><a class="tab" href="#impact" data-target="impact">Impact</a></li>
           <li><a class="tab" href="#journey" data-target="journey">Journey</a></li>
           <li><a class="tab" href="#care" data-target="care">Care and end of life</a></li>
@@ -114,6 +115,23 @@
         </div>
       </section>
 
+      <!-- About this unit -->
+      <section class="section" id="about" aria-labelledby="about-title">
+        <h2 class="section__title" id="about-title">About this unit</h2>
+        <div class="section__body">
+          <dl class="kv">
+            <div class="kv__row"><dt>Serial</dt><dd>OEV-75K-2026-000342-006</dd></div>
+            <div class="kv__row"><dt>Batch</dt><dd>2023-09, all batches of this model</dd></div>
+            <div class="kv__row"><dt>Manufactured</dt><dd>12 Sep 2023</dd></div>
+            <div class="kv__row"><dt>Sold by</dt><dd class="lines"><span>Grigolato.IT</span><span>Gaffel 48, 1319 BV Almere, Netherlands</span><span>support@origovero.com</span></dd></div>
+            <div class="kv__row"><dt>Ecodesign readiness</dt><dd>Voluntary disclosure</dd></div>
+            <div class="kv__row"><dt>Durability score</dt><dd>9 years</dd></div>
+            <div class="kv__row"><dt>Substances of concern</dt><dd class="lines"><span>Lithium hexafluorophosphate LiPF6 (electrolyte)</span><span>Organic carbonate solvents (electrolyte)</span><span>Cadmium &lt;0.002% and lead &lt;0.004%, below Art. 13(3) marking thresholds</span></dd></div>
+            <div class="kv__row"><dt>Documents</dt><dd class="lines"><!-- TODO: document URLs were not supplied; links do nothing until then (see app.js) --><span><a class="link" href="#" data-todo="recycling-instructions-url">Recycling instructions&nbsp;↗</a></span><span><a class="link" href="#" data-todo="compliance-certificate-url">Compliance certificate&nbsp;↗</a></span></dd></div>
+          </dl>
+        </div>
+      </section>
+
       <!-- Impact -->
       <section class="section" id="impact" aria-labelledby="impact-title">
         <h2 class="section__title" id="impact-title">Impact</h2>
@@ -146,6 +164,10 @@
       <section class="section" id="journey" aria-labelledby="journey-title">
         <h2 class="section__title" id="journey-title">Journey</h2>
         <p class="section__lead">Every step, recorded by the people who handled it. Tap a step for detail.</p>
+        <div class="block block--sum">
+          <p class="block__label">From factory to you</p>
+          <p class="block__figure"><span class="block__num">57</span><span class="block__unit">days</span></p>
+        </div>
         <ol class="section__body timeline">
           <li class="step">
             <div class="step__rail" aria-hidden="true"><span class="step__node"><span class="step__dot"></span></span><span class="step__line"></span></div>
@@ -162,7 +184,7 @@
             <div class="step__rail" aria-hidden="true"><span class="step__node"><span class="step__dot"></span></span><span class="step__line"></span></div>
             <details class="step__content">
               <summary class="step__head">
-                <time class="step__date" datetime="2023-10-03">3 Oct 2023</time>
+                <time class="step__date" datetime="2023-10-03">3 Oct 2023, 21 days later</time>
                 <span class="step__top"><span class="step__stage">Shipped from</span><svg class="glyph glyph--24 step__chevron" aria-hidden="true"><use href="#g-chevron"/></svg></span>
                 <span class="step__sub">OrigoEV Logistics, Skellefteå, Sweden</span>
               </summary>
@@ -173,7 +195,7 @@
             <div class="step__rail" aria-hidden="true"><span class="step__node"><span class="step__dot"></span></span><span class="step__line"></span></div>
             <details class="step__content">
               <summary class="step__head">
-                <time class="step__date" datetime="2023-11-08">8 Nov 2023</time>
+                <time class="step__date" datetime="2023-11-08">8 Nov 2023, 36 days later</time>
                 <span class="step__top"><span class="step__stage">Installed</span><svg class="glyph glyph--24 step__chevron" aria-hidden="true"><use href="#g-chevron"/></svg></span>
                 <span class="step__sub">Nordic Taxi Fleet (demo), Umeå, Sweden</span>
               </summary>
@@ -184,7 +206,7 @@
             <div class="step__rail" aria-hidden="true"><span class="step__node"><span class="step__dot"></span></span><span class="step__line"></span></div>
             <details class="step__content">
               <summary class="step__head">
-                <time class="step__date" datetime="2026-06-16">16 Jun 2026</time>
+                <time class="step__date" datetime="2026-06-16">16 Jun 2026, 3 years later</time>
                 <span class="step__top"><span class="step__stage">Collected for take-back</span><svg class="glyph glyph--24 step__chevron" aria-hidden="true"><use href="#g-chevron"/></svg></span>
                 <span class="step__sub">Authorised EV service network, Skellefteå EV Service Centre, Sweden</span>
               </summary>
@@ -195,7 +217,7 @@
             <div class="step__rail" aria-hidden="true"><span class="step__node"><span class="step__dot"></span></span><span class="step__line"></span></div>
             <details class="step__content">
               <summary class="step__head">
-                <time class="step__date" datetime="2026-07-21">21 Jul 2026</time>
+                <time class="step__date" datetime="2026-07-21">21 Jul 2026, 35 days later</time>
                 <span class="step__top"><span class="step__stage">Sorted</span><svg class="glyph glyph--24 step__chevron" aria-hidden="true"><use href="#g-chevron"/></svg></span>
                 <span class="step__sub">OrigoLoop Recycling AB, Skellefteå, Sweden</span>
               </summary>
@@ -206,7 +228,7 @@
             <div class="step__rail" aria-hidden="true"><span class="step__node"><span class="step__dot"></span></span></div>
             <details class="step__content" open>
               <summary class="step__head">
-                <time class="step__date" datetime="2026-08-12">12 Aug 2026</time>
+                <time class="step__date" datetime="2026-08-12">12 Aug 2026, 22 days later</time>
                 <span class="step__top"><span class="step__stage">Given a second life</span><svg class="glyph glyph--24 step__chevron" aria-hidden="true"><use href="#g-chevron"/></svg></span>
                 <span class="step__sub">OrigoLoop Recycling AB</span>
               </summary>

@@ -309,8 +309,9 @@ h1 { font-weight: 400; }
 .continues__name { font-size: 20px; line-height: 26px; font-weight: 500; }
 .continues__sub { font-size: 17px; line-height: 25px; color: rgba(255, 255, 255, 0.72); }
 .eol__body { padding: 24px var(--gutter) 0; }
-.note { padding: 16px 0; display: grid; gap: 4px; }
-.note__title { font-size: 20px; line-height: 26px; font-weight: 500; }
+.note { margin-top: 40px; display: grid; gap: 4px; }
+.note + .kv { margin-top: 12px; }
+.note__title { font-size: 17px; line-height: 25px; font-weight: 500; }
 .note__text { font-size: 17px; line-height: 25px; color: var(--text-secondary); }
 
 /* ---------- FAQ ---------- */

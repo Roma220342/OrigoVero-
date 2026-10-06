@@ -223,7 +223,7 @@ h1 { font-weight: 400; }
 /* Dividers sit between neighbours of one list. The last row of a list has none, so every list ends the same way. */
 .kv--end .kv__row:last-child { border-bottom: 0; }
 .kv dt { flex: 0 0 110px; font-size: 15px; line-height: 22px; color: var(--text-secondary); overflow-wrap: anywhere; }
-.block--sum { margin-top: 24px; border-bottom: 1px solid var(--border-subtle); }
+.block.block--sum { margin-top: 24px; border-bottom: 0; padding-bottom: 0; }
 .rows { display: block; }
 .kv dd { flex: 1; min-width: 0; font-size: 17px; line-height: 25px; font-weight: 500; overflow-wrap: anywhere; }
 

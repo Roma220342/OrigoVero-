@@ -313,6 +313,11 @@
       zoomControl: false, attributionControl: false, boxZoom: false, keyboard: false, tap: false, scrollWheelZoom: false,
       dragging: interactive, touchZoom: interactive, doubleClickZoom: interactive, zoomSnap: 0.25,
     });
+    // While the camera zooms, Leaflet only scales the drawn route, which smears it into a blur. Hide it for the flight and
+    // let it redraw sharp at the end.
+    const el0 = map.getContainer();
+    map.on('zoomstart', () => el0.classList.add('is-zooming'));
+    map.on('zoomend moveend', () => el0.classList.remove('is-zooming'));
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 14, attribution: '© OpenStreetMap contributors' }).addTo(map);
     L.control.attribution({ prefix: false, position: 'bottomleft' }).addTo(map);
     const pts = stepData.map((s) => [s.lat, s.lng]);

@@ -265,6 +265,8 @@ h1 { font-weight: 400; }
 .map__caption { margin-top: 8px; font-size: 15px; line-height: 22px; color: var(--text-secondary); }
 .map__fallback { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; color: var(--text-secondary); }
 .map__fallback[hidden] { display: none; }
+.map .leaflet-overlay-pane, .map-sheet .leaflet-overlay-pane { transition: opacity 0.15s ease; }
+.map .is-zooming .leaflet-overlay-pane, .map-sheet .is-zooming .leaflet-overlay-pane { opacity: 0; }
 .map .leaflet-container, .map-sheet .leaflet-container { background: #eeedea; font-family: inherit; }
 .map .leaflet-tile-pane, .map-sheet .leaflet-tile-pane { filter: grayscale(1) contrast(0.78) brightness(1.1); }
 .map .leaflet-control-attribution, .map-sheet .leaflet-control-attribution { font-size: 11px; line-height: 16px; background: rgba(255, 255, 255, 0.7); color: var(--text-secondary); }

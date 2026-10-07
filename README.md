@@ -29,7 +29,7 @@ Open `http://localhost:8770` and use a 402 px wide viewport (the Figma frame wid
 | `Language button` (EN + chevron, 48 px tap area) | `.lang-btn` opens `#lang-sheet` |
 | `Section tabs`: active tab = Medium + 2 px gold rule over a 2 px hairline | `.tab[aria-current="true"]`, `.tabs::after` |
 | `Hero` with the serial number (the page being open already means the passport is verified, so there is no separate badge) | `.hero`, `.verified` |
-| Battery health band (82%, gold on ink) | `.hero-body`, `.fact` |
+| Key facts band (three labelled facts, gold on ink) | `.hero-body`, `.keyfacts` |
 | `Journey summary` (57 days from factory to installation) | `.block--sum` |
 | `Map / inline` (240 px, expand button, city-level caption) | `.map`, `#map-view`, Leaflet inside `#map-canvas` |
 | `Map expanded` (full screen, close at top right, step card with Previous and Next) | `<dialog class="map-sheet">`, `.map-card`, `.nav-btn` |

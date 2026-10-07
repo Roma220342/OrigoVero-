@@ -435,3 +435,15 @@ select.field__control {
 .nav-btn .glyph { width: 24px; height: 24px; }
 @media (prefers-reduced-motion: reduce) { .map-sheet, .map-sheet::backdrop { transition: none; } }
 .map-sheet .leaflet-bottom { bottom: var(--card-h, 250px); }
+
+/* ---------- Jump row ---------- */
+.actions { padding: 24px var(--gutter) 0; }
+.rowlink {
+  position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%;
+  padding: 14px 0; border: 0; border-bottom: 1px solid var(--border-subtle); background: none;
+  font: inherit; font-size: 17px; line-height: 25px; font-weight: 500; text-align: left; color: var(--text-primary); text-decoration: none; cursor: pointer;
+}
+.actions .rowlink:last-child { border-bottom: 0; }
+.rowlink:active { background: var(--surface-subtle); }
+.rowlink::after { content: ""; position: absolute; inset: -4px 0; } /* 44px touch area */
+.rowlink__icon { flex: none; }

@@ -29,12 +29,12 @@ Open `http://localhost:8770` and use a 402 px wide viewport (the Figma frame wid
 | `Language button` (EN + chevron, 48 px tap area) | `.lang-btn` opens `#lang-sheet` |
 | `Section tabs`: active tab = Medium + 2 px gold rule over a 2 px hairline | `.tab[aria-current="true"]`, `.tabs::after` |
 | `Hero` with the serial number (the page being open already means the passport is verified, so there is no separate badge) | `.hero`, `.verified` |
-| Key facts band (three labelled facts, gold on ink) | `.hero-body`, `.keyfacts` |
+| Key fact band (one headline fact, gold on ink) | `.hero-body`, `.fact` |
 | `Journey summary` (57 days from factory to installation) | `.block--sum` |
 | `Map / inline` (240 px, expand button, city-level caption) | `.map`, `#map-view`, Leaflet inside `#map-canvas` |
 | `Map expanded` (full screen, close at top right, step card with Previous and Next) | `<dialog class="map-sheet">`, `.map-card`, `.nav-btn` |
-| `Continues as` band and the End of life steps | `.continues`, `.section--eol`, `.eol__body` |
-| `Key figures` (75 kWh, 3000 charge cycles, 96 months) at the top of Specifications | `.figures` |
+| `Continues as` band (one key-facts row) and the End of life steps | `.keyfacts--band`, `.section--module`, `.module__body` |
+| `Key figures` (75 kWh, 3000 charge cycles, 96 months) at the top of Details | `.figures` |
 | Expanding rows (Battery type, More data, Substances, Safety, Documents) | `details.more`, `.pairs`, `.plain` |
 | `Figure block` rows in Impact (label, big number, parts) | `.blocks`, `.block` |
 | Details card under an open step, FAQ answer, Category text | `.card-block`, `.faq__a` (surface subtle, radius 4) |
@@ -49,7 +49,7 @@ End of life 975 (1044), Good to know 354, Report 553. Page 5528 px against 5559 
 
 ## Behaviour
 
-- **Sections** run Specifications, Impact, Journey, End of life, Good to know, Report. Everything that expands (journey step, FAQ, Category) opens with a height animation, and opening a journey step closes the previous one.
+- **Sections** run Details, Impact, Journey, End of life, Good to know, Report. Everything that expands (journey step, FAQ, Category) opens with a height animation, and opening a journey step closes the previous one.
 - **One radius**: every rounded surface uses 4 px (`--r`).
 - **Tabs** scroll sideways; the active tab changes as you scroll and the strip keeps it in view. An anchor jump leaves 36 px between the header and the section title.
 - **Map**: one component fed by the steps (`data-lat`, `data-lng`, `data-city`, `data-place` on each `.step`), so it works for any product.
@@ -69,7 +69,7 @@ Two brand colours from the logo: ink `#1B1B19` and gold `#D4AF37`. Gold is used 
 
 - **Keyboard focus ring** (2 px ink) is kept for accessibility, although the Figma state sheet does not draw it.
 - **Header is sticky**; Figma frames are static.
-- **Carbon footprint study** and the three documents in Specifications (responsible sourcing, labels, substance safety) link to the PDFs on origovero.com and open in a new tab.
+- **Carbon footprint study** and the three documents in Details (responsible sourcing, labels, substance safety) link to the PDFs on origovero.com and open in a new tab.
 - **Map tiles** load from OpenStreetMap and Leaflet from unpkg. Both are third-party requests; self-host or use a licensed provider for production. If either fails, the map block says so and every place is still named in the steps.
 - **Coordinates** of Skellefteå and Umeå are city centres entered by hand; the source gives place names only.
 - **Link arrow** is an SVG icon instead of the ↗ text glyph, so it looks the same in every browser.

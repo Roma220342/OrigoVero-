@@ -48,7 +48,7 @@
       <nav class="tabs" aria-label="Sections">
         <ul class="tabs__scroll" id="tabs-scroll">
           <li><a class="tab" href="#top" data-target="top" aria-current="true">Overview</a></li>
-          <li><a class="tab" href="#specs" data-target="specs">Specifications</a></li>
+          <li><a class="tab" href="#specs" data-target="specs">Details</a></li>
           <li><a class="tab" href="#journey" data-target="journey">Journey</a></li>
           <li><a class="tab" href="#eol" data-target="eol">End of life</a></li>
           <li><a class="tab" href="#impact" data-target="impact">Impact</a></li>
@@ -69,8 +69,8 @@
           <p class="verified__serial">Serial OEV-75K-2026-000342-006</p>
         </div>
         <div class="notice">
-          <p class="notice__title">Second life</p>
-          <p class="notice__text">This passport covers the first life of the battery. It now has a new passport.</p>
+          <p class="notice__title">This battery has a new passport</p>
+          <p class="notice__text">This one covers its first life only.</p>
           <a class="rowlink rowlink--in" href="https://www.origovero.com/b2c/product/SCT-2026-fb5aac698704" target="_blank" rel="noopener"><span>Open the new passport</span><svg class="glyph glyph--24 rowlink__icon" aria-hidden="true"><use href="#g-ext"/></svg><span class="sr-only"> (opens another site)</span></a>
         </div>
       </section>
@@ -83,16 +83,15 @@
 
       <!-- Battery health: the first peak of the page -->
       <div class="hero-body">
-        <dl class="keyfacts" aria-label="Key facts">
-          <div><dt>Chemistry</dt><dd>LiFePO₄</dd></div>
-          <div><dt>Rated capacity</dt><dd>75 kWh</dd></div>
-          <div><dt>Made in</dt><dd>Skellefteå, Sweden</dd></div>
-        </dl>
+        <section class="fact" aria-label="Rated capacity">
+          <p class="fact__text">Rated capacity</p>
+          <p class="fact__figure">75&nbsp;kWh</p>
+        </section>
       </div>
 
-      <!-- Specifications -->
+      <!-- Details -->
       <section class="section" id="specs" aria-labelledby="specs-title">
-        <h2 class="section__title" id="specs-title">Specifications</h2>
+        <h2 class="section__title" id="specs-title">Details</h2>
         <div class="section__body">
           <dl class="figures">
             <div class="figure"><dt>Rated capacity</dt><dd><span class="figure__line"><span class="figure__num">75</span><span class="figure__unit">kWh</span></span></dd></div>
@@ -119,7 +118,7 @@
               <div class="kv__row"><dt>Removable by independent repairer</dt><dd>Yes</dd></div>
               <div class="kv__row"><dt>Durability score</dt><dd>9 years</dd></div>
             </dl>
-            <h3 class="group">Details</h3>
+            <h3 class="group">Technical data</h3>
             <details class="more">
               <summary class="more__head"><span class="more__label">More data</span><span class="more__value">Efficiency and testing</span><svg class="glyph glyph--24 more__chevron" aria-hidden="true"><use href="#g-chevron"/></svg></summary>
               <div class="more__body"><div class="card-block"><dl class="pairs"><div><dt>Charging efficiency</dt><dd>96% when new, 94% at half life</dd></div><div><dt>Internal resistance</dt><dd>Battery 0.045 Ω, cell 0.0008 Ω</dd></div><div><dt>Lifetime tested to</dt><dd>IEC 62660-1:2018, test charge rate 1 C</dd></div></dl></div></div>
@@ -196,17 +195,15 @@
       </section>
 
       <!-- End of life: batteries only -->
-      <section class="section section--eol" id="eol" aria-labelledby="eol-title">
-        <div class="eol__head">
+      <section class="section section--module" id="eol" aria-labelledby="eol-title">
+        <div class="module__head">
           <h2 class="section__title" id="eol-title">End of life</h2>
           <p class="section__lead">What happened after its first life.</p>
         </div>
-        <div class="continues">
-          <p class="continues__label">Continues as</p>
-          <p class="continues__name">OrigoStore 60 kWh stationary pack</p>
-          <p class="continues__sub">Second life of the OrigoEV 75 kWh</p>
-        </div>
-        <div class="eol__body">
+        <dl class="keyfacts keyfacts--band" aria-label="Continues as">
+          <div><dt>Continues as</dt><dd>OrigoStore 60 kWh stationary pack</dd></div>
+        </dl>
+        <div class="module__body">
           <ol class="timeline">
           <li class="step" data-step="4" data-lat="64.7507" data-lng="20.9528" data-city="Skellefteå" data-place="Authorised EV service network, Skellefteå EV Service Centre, Sweden">
             <div class="step__rail" aria-hidden="true"><span class="step__node"><span class="step__dot"></span></span><span class="step__line"></span></div>

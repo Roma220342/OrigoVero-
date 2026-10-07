@@ -165,10 +165,6 @@ h1 { font-weight: 400; }
 
 /* ---------- Hero body (183) ---------- */
 .hero-body { background: var(--ink); color: var(--paper); padding: 28px var(--gutter); } /* equal above and below: the figure line leaves ~6px on top, the last text line ~6px below */
-.fact { display: grid; gap: 4px; }
-.fact__figure { font-size: 40px; line-height: 40px; font-weight: 500; letter-spacing: -0.04em; color: var(--gold); }
-.fact__text { font-size: 17px; line-height: 25px; font-weight: 500; }
-.fact__date { font-size: 15px; line-height: 22px; color: rgba(255, 255, 255, 0.72); }
 
 /* ---------- Sections ---------- */
 /* An anchor jump leaves 36px between the sticky header and the section title (section top is 72px above its title). */
@@ -184,7 +180,7 @@ h1 { font-weight: 400; }
 .step__node { display: flex; justify-content: center; width: 14px; padding-top: 4px; }
 .step__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ink); }
 .timeline { margin-top: 24px; }
-.eol__body .timeline { margin-top: 0; }
+.module__body .timeline { margin-top: 0; }
 .step__line { flex: 1; width: 2px; background: var(--border-default); }
 .step--current .step__node { width: 18px; padding-top: 2px; }
 .step--current .step__dot { width: 18px; height: 18px; background: var(--gold); border: 2px solid var(--ink); }
@@ -298,13 +294,10 @@ h1 { font-weight: 400; }
 .block__link { font-size: 17px; line-height: 25px; font-weight: 500; }
 
 /* ---------- End of life: "Continues as" is a second peak, then the last steps ---------- */
-.section--eol { padding: 0; }
-.eol__head { padding: 72px var(--gutter) 0; }
-.continues { margin-top: 24px; display: grid; gap: 6px; padding: 28px var(--gutter); background: var(--ink); color: var(--paper); }
-.continues__label { font-size: 15px; line-height: 22px; font-weight: 500; color: var(--gold); }
-.continues__name { font-size: 20px; line-height: 26px; font-weight: 500; }
-.continues__sub { font-size: 17px; line-height: 25px; color: rgba(255, 255, 255, 0.72); }
-.eol__body { padding: 24px var(--gutter) 0; }
+.section--module { padding: 0; }
+.module__head { padding: 72px var(--gutter) 0; }
+.keyfacts--band { margin-top: 24px; padding: 28px var(--gutter); background: var(--ink); color: var(--paper); }
+.module__body { padding: 24px var(--gutter) 0; }
 .note { margin-top: 40px; display: grid; gap: 4px; }
 .note + .pairs { margin-top: 20px; }
 .note__title { font-size: 17px; line-height: 25px; font-weight: 500; }
@@ -459,8 +452,12 @@ select.field__control {
 
 /* ---------- Key facts: up to three labelled facts that hold for the whole life of the passport ---------- */
 .keyfacts { margin: 0; }
-.keyfacts > div { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.16); }
-.keyfacts > div:first-child { padding-top: 0; border-top: 0; }
-.keyfacts > div:last-child { padding-bottom: 0; }
+.keyfacts > div { display: grid; gap: 4px; }
 .keyfacts dt { font-size: 15px; line-height: 22px; color: rgba(255, 255, 255, 0.72); }
-.keyfacts dd { margin: 0; font-size: 17px; line-height: 25px; font-weight: 500; color: var(--gold); text-align: right; }
+.keyfacts dd { margin: 0; font-size: 28px; line-height: 31px; font-weight: 500; letter-spacing: -0.025em; color: var(--gold); overflow-wrap: anywhere; }
+
+/* ---------- Key fact: one headline fact under the photo; the details follow below ---------- */
+.fact { display: grid; gap: 4px; }
+.fact__figure { font-size: 40px; line-height: 40px; font-weight: 500; letter-spacing: -0.04em; color: var(--gold); }
+.fact__text { font-size: 15px; line-height: 22px; color: rgba(255, 255, 255, 0.72); }
+.fact__date { font-size: 15px; line-height: 22px; color: rgba(255, 255, 255, 0.72); }

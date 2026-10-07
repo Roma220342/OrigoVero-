@@ -85,3 +85,7 @@ The camera follows the product. It frames the city of the current step (zoom cap
 
 ### Dividers
 A hairline sits between two neighbours of one list. The last row of a list has none, so every list ends the same way (`.kv--end`). The same rule is applied in the Figma file.
+
+## Feedback and reviews
+
+The report form also takes feedback: the reason "Share feedback" goes to the brand privately, in the same place on all three passports. Public reviews are not shown. Questions for the client: are public ratings wanted at all (the EU passport content is an authoritative record from the operator, and reviews are not part of it), how would a review be tied to the item (scanning the item's own QR proves possession), and where would they be aggregated (the "All batches of this model" page looks like the natural place).

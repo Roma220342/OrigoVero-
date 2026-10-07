@@ -233,7 +233,7 @@ h1 { font-weight: 400; }
 .figure__line { display: grid; gap: 2px; }
 .figure__num { font-size: 40px; line-height: 40px; font-weight: 500; letter-spacing: -0.04em; }
 .figure__unit { font-size: 15px; line-height: 22px; font-weight: 500; }
-.kv__sub { margin-left: 6px; font-size: 15px; font-weight: 400; color: var(--text-secondary); white-space: nowrap; }
+.kv__sub { margin-left: 6px; font-size: 15px; line-height: 22px; font-weight: 400; color: var(--text-secondary); white-space: nowrap; }
 @media (max-width: 340px) { .figures { grid-template-columns: repeat(3, minmax(0, 1fr)); } .figure dt { white-space: normal; min-height: 46px; } .figure__num { font-size: 34px; line-height: 36px; } }
 
 /* ---------- Expandable rows (Specifications): the preview is secondary, the facts open below ---------- */
